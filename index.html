@@ -39,7 +39,8 @@ html,body{
   background-size:cover;
   background-position:center;
   filter:brightness(.95) contrast(1.05);
-  transition:opacity .4s, transform .4s;
+  transition:opacity .15s ease-out, transform .15s ease-out, filter .15s ease-out;
+  will-change:opacity, transform, filter;
 }
 
 .hero::after{
@@ -265,6 +266,55 @@ Clear tracking, fast delivery, no confusion.
 </section>
 
 </main>
+
+<script>
+(function() {
+  const photo = document.querySelector('.hero .photo');
+  const hero = document.querySelector('.hero');
+
+  if (!photo || !hero) return;
+
+  let ticking = false;
+
+  function updatePhotoOnScroll() {
+    const heroHeight = hero.offsetHeight;
+    const scrollY = window.scrollY;
+
+    // Calculate progress: 0 at top, 1 when scrolled past hero
+    const progress = Math.min(Math.max(scrollY / (heroHeight * 0.8), 0), 1);
+
+    // Fade out: opacity goes from 1 to 0
+    const opacity = 1 - progress;
+
+    // Slight zoom effect: scale from 1 to 1.1 as we scroll
+    const scale = 1 + (progress * 0.1);
+
+    // Slight blur effect as it fades
+    const blur = progress * 4;
+
+    // Brightness decreases as we scroll
+    const brightness = 0.95 - (progress * 0.3);
+
+    photo.style.opacity = opacity;
+    photo.style.transform = `scale(${scale})`;
+    photo.style.filter = `brightness(${brightness}) contrast(1.05) blur(${blur}px)`;
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(updatePhotoOnScroll);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Initial call to set correct state on page load
+  updatePhotoOnScroll();
+})();
+</script>
 
 </body>
 </html>
