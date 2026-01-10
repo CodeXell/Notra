@@ -1,4 +1,16 @@
-### **Get Stuff Done**
+# **Get Stuff Done**
+
+> [!NOTE]
+> ### Upcoming Updates:
+>
+> We are currently aiming to add these new features:
+> 1. Markdown support in Notes.
+> 2. Improvement in downloading notes (new lines are currently shown as naught, and alignement is also deleted. We hope to fix these few bugs, although generally, the download will lose formatting)
+> 3. TextPilot (Offline AI for grammar and spellings correction)
+>
+> We are currently aiming to fix these bugs:
+> 1. Version Page Glitch: The page appears mis-aligned at the bottom of the main page.
+> 2. Search: Searchig for notes reveals the html script behind the formatting, and sticks that to your note unless you click 'edit' then 'save'.
 
 
 GSD is a utility application that will provide you various services across a series of categories from legal to business to labour. We can provide online services that you need completed but don't have the time to do.
