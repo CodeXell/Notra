@@ -2,7 +2,7 @@
 
 > [!NOTE]
 > ### Upcoming Updates:
-> MacOS Support Incoming!
+>
 > We are currently aiming to add these new features:
 > 1. Markdown support in Notes.
 > 2. Improvement in downloading notes (new lines are currently shown as naught, and alignement is also deleted. We hope to fix these few bugs, although generally, the download will lose formatting)
