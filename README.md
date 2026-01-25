@@ -1,6 +1,6 @@
-# **Get Stuff Done**
+# **Notra**
 
-GSD is a Windows Note-taking app.
+Notra is a Windows Note-taking app.
 To download, you can view [our website](https://getstuffdonewebsite.netlify.app) or download the app from this repository.\
 The website is for downloading the app, where more information may be found.
 You can also download our desktop app from this repository.
