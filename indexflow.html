@@ -34,7 +34,6 @@ html,body{
   overflow:hidden;
 }
 
-/* ---------- LAYOUT ---------- */
 .app-container{
   display:flex;
   height:100vh;
@@ -47,7 +46,6 @@ html,body{
   overflow:hidden;
 }
 
-/* ---------- SIDEBAR ---------- */
 .sidebar{
   width:var(--sidebar-collapsed);
   background:linear-gradient(180deg,#0e1833,#0b142b);
@@ -149,7 +147,6 @@ html,body{
   color:var(--muted);
 }
 
-/* ---------- MAIN CONTENT ---------- */
 .content-area{
   flex:1;
   display:flex;
@@ -163,7 +160,6 @@ html,body{
   padding:30px;
 }
 
-/* ---------- HEADER ---------- */
 .content-header{
   padding:20px 30px;
   border-bottom:1px solid var(--border);
@@ -181,7 +177,6 @@ html,body{
   background-clip:text;
 }
 
-/* ---------- BACK BUTTON ---------- */
 #backButton{
   display:none;
   margin:0 0 20px 0;
@@ -194,12 +189,12 @@ html,body{
   cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
 }
+
 #backButton:hover{
   transform:scale(1.08);
   box-shadow:0 0 18px rgba(77,195,255,.6);
 }
 
-/* ---------- PANEL ---------- */
 .panel{
   background:linear-gradient(180deg,var(--surface),var(--surface-2));
   border-radius:16px;
@@ -208,7 +203,6 @@ html,body{
   box-shadow:0 20px 60px rgba(0,0,0,.55);
 }
 
-/* ---------- NOTES ---------- */
 .notes-toolbar{
   display:flex;
   gap:12px;
@@ -232,6 +226,16 @@ html,body{
   outline:none;
   border-color:var(--accent);
   box-shadow:0 0 20px rgba(77,195,255,.3);
+  animation:focusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes focusPulse{
+  0%, 100%{
+    box-shadow:0 0 20px rgba(77,195,255,.3);
+  }
+  50%{
+    box-shadow:0 0 30px rgba(77,195,255,.6);
+  }
 }
 
 .notes-toolbar button{
@@ -364,7 +368,6 @@ html,body{
   background:var(--highlight);
 }
 
-/* ---------- STATUS BAR ---------- */
 .status-bar-container{
   background:linear-gradient(180deg,#0b142b,#0e1833);
   border-top:1px solid var(--border);
@@ -389,7 +392,6 @@ html,body{
   transform:scale(1.05);
 }
 
-/* ---------- VERSION PAGE ---------- */
 #versionPage{
   display:none;
   padding:60px 30px;
@@ -416,7 +418,6 @@ html,body{
   box-shadow:0 20px 60px rgba(77,195,255,.3);
 }
 
-/* ---------- MODALS ---------- */
 .modal{
   position:fixed;
   inset:0;
@@ -446,7 +447,9 @@ html,body{
   font-size:22px;
 }
 
-.modal-content input[type="text"]{
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="password"]{
   width:100%;
   padding:12px 16px;
   border-radius:10px;
@@ -456,6 +459,32 @@ html,body{
   margin-bottom:14px;
   font-family:inherit;
   font-size:14px;
+  transition:all .3s ease;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus,
+.modal-content input[type="password"]:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.3);
+  animation:focusPulse 1.5s ease-in-out infinite;
+}
+
+.modal-content input[type="text"].error{
+  animation:errorFlash 0.5s ease-in-out 3;
+  border-color:#ff4444;
+}
+
+@keyframes errorFlash{
+  0%, 100%{
+    border-color:#ff4444;
+    box-shadow:0 0 20px rgba(255,68,68,.4);
+  }
+  50%{
+    border-color:#ff0000;
+    box-shadow:0 0 30px rgba(255,0,0,.7);
+  }
 }
 
 .modal-content textarea{
@@ -471,6 +500,14 @@ html,body{
   resize:vertical;
   font-size:14px;
   line-height:1.6;
+  transition:all .3s ease;
+}
+
+.modal-content textarea:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.3);
+  animation:focusPulse 1.5s ease-in-out infinite;
 }
 
 .modal-content label{
@@ -517,7 +554,80 @@ html,body{
   transform:scale(1.06);
 }
 
-/* ---------- TABS ---------- */
+.confirm-dialog{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+  backdrop-filter:blur(4px);
+}
+
+.confirm-dialog-content{
+  background:linear-gradient(180deg,#111a33,#0e1730);
+  border-radius:16px;
+  border:1px solid var(--border);
+  padding:28px;
+  max-width:400px;
+  width:90%;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);
+}
+
+.confirm-dialog-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.confirm-dialog-icon{
+  font-size:32px;
+}
+
+.confirm-dialog-title{
+  font-size:20px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+.confirm-dialog-message{
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:24px;
+  font-size:15px;
+}
+
+.confirm-dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+}
+
+.confirm-dialog-actions button{
+  padding:10px 24px;
+  border-radius:999px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.confirm-dialog-actions .confirm-cancel{
+  background:rgba(255,255,255,.1);
+  color:white;
+}
+
+.confirm-dialog-actions .confirm-yes{
+  background:#ff4444;
+  color:white;
+}
+
+.confirm-dialog-actions button:hover{
+  transform:scale(1.06);
+}
+
 .tabs{
   display:flex;
   gap:8px;
@@ -609,14 +719,24 @@ html,body{
   padding-left:20px;
 }
 
-/* ---------- HIGHLIGHT ---------- */
 .highlight{
-  background:rgba(127,95,255,.45);
-  padding:0 2px;
+  background:rgba(127,95,255,.6);
+  padding:2px 4px;
   border-radius:4px;
+  animation:highlightPulse 2s ease-in-out infinite;
 }
 
-/* ---------- EMPTY STATE ---------- */
+@keyframes highlightPulse{
+  0%, 100%{
+    background:rgba(127,95,255,.6);
+    box-shadow:0 0 10px rgba(127,95,255,.3);
+  }
+  50%{
+    background:rgba(127,95,255,.8);
+    box-shadow:0 0 20px rgba(127,95,255,.5);
+  }
+}
+
 .empty-state{
   text-align:center;
   padding:60px 20px;
@@ -631,17 +751,165 @@ html,body{
 .empty-state div:last-child{
   font-size:16px;
 }
+
+/* Auth Section Styles */
+#authSection{
+  display:none;
+}
+
+.auth-panel{
+  max-width:400px;
+  margin:40px auto;
+}
+
+.auth-toggle{
+  text-align:center;
+  margin-top:16px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.auth-toggle button{
+  background:none;
+  border:none;
+  color:var(--accent);
+  cursor:pointer;
+  text-decoration:underline;
+  font-size:14px;
+}
+
+.auth-message{
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:14px;
+  font-size:14px;
+  text-align:center;
+}
+
+.auth-message.error{
+  background:rgba(255,68,68,.2);
+  border:1px solid rgba(255,68,68,.4);
+  color:#ff4444;
+}
+
+.auth-message.success{
+  background:rgba(77,195,255,.2);
+  border:1px solid rgba(77,195,255,.4);
+  color:var(--accent);
+}
+
+.user-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:8px 0;
+}
+
+.user-info button{
+  padding:6px 16px;
+  border-radius:999px;
+  border:none;
+  background:rgba(255,68,68,.2);
+  color:#ff6666;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+.user-info button:hover{
+  background:rgba(255,68,68,.3);
+  transform:scale(1.05);
+}
+
+/* ===== AUTH INPUTS (MATCH BLUE PULSING STYLE) ===== */
+#authSection input[type="email"],
+#authSection input[type="password"]{
+  width:100%;
+  padding:12px 16px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0d1633;
+  color:white;
+  margin-bottom:14px;
+  font-family:inherit;
+  font-size:14px;
+  transition:all .3s ease;
+}
+
+#authSection input[type="email"]:focus,
+#authSection input[type="password"]:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.3);
+  animation:focusPulse 1.5s ease-in-out infinite;
+}
+/* ===== AUTH BUTTONS (FLOAT + SHADOW LIKE OTHER BUTTONS) ===== */
+.auth-btn{
+  flex:1;
+  padding:12px;
+  border-radius:999px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  font-size:14px;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+.auth-btn.primary{
+  background:var(--accent);
+  color:#06101f;
+}
+
+.auth-btn.secondary{
+  background:rgba(77,195,255,.2);
+  color:var(--accent);
+}
+
+.auth-btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 18px rgba(77,195,255,.6);
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="app-container">
-  <!-- SIDEBAR -->
-  <div class="main-layout">
+  <!-- Auth Section (shows when not logged in) -->
+  <div id="authSection">
+    <div class="workspace">
+      <div class="auth-panel panel">
+        <h2 style="text-align:center; margin-bottom:24px;">Welcome to Notra</h2>
+        <div id="authMessage" class="auth-message" style="display:none;"></div>
+        
+        <input type="email" id="authEmail" placeholder="Email">
+        <input type="password" id="authPassword" placeholder="Password">
+        
+        <div style="display:flex; gap:12px; margin-top:20px;">
+          <button id="signInBtn" class="auth-btn primary">
+             Sign In
+          </button>
+
+          <button id="signUpBtn" class="auth-btn secondary">
+            Sign Up
+          </button>
+
+        </div>
+        
+        <div class="auth-toggle">
+          <p>Your notes will sync automatically to the cloud and be available on any device.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App (shows when logged in) -->
+  <div class="main-layout" id="mainApp" style="display:none;">
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h1>Notra</h1>
+        <h1>NOTRA</h1>
       </div>
       
       <div class="sidebar-content">
@@ -674,16 +942,20 @@ html,body{
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <div class="content-area">
       <div class="content-header">
-        <h2>📝 My Notes</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2>📝 My Notes</h2>
+          <div class="user-info">
+            <span id="userEmail" style="font-size:14px; color:var(--muted);"></span>
+            <button id="logOutBtn">Log Out</button>
+          </div>
+        </div>
       </div>
       
       <div class="workspace" id="appContent">
         <button id="backButton">← Back</button>
         
-        <!-- NOTES -->
         <div class="panel">
           <div class="notes-toolbar">
             <input id="searchNotes" placeholder="🔍 Search notes...">
@@ -693,23 +965,37 @@ html,body{
           <div class="notes-grid" id="notesGrid"></div>
         </div>
 
-        <!-- VERSION PAGE -->
         <div id="versionPage">
-          <p>Your software is running Notra - Version 4.1.0</p>
-          <div class="version-logo">Notra</div>
+          <p>Your software is running Notra - Version 4.2.1 (Cloud Sync)</p>
+          <div class="version-logo">NOTRA</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- STATUS BAR (BOTTOM) -->
-  <div class="status-bar-container">
+  <div class="status-bar-container" id="statusBar" style="display:none;">
     <div class="status-pill" id="statusApp">🟢 App Ready</div>
     <div class="status-pill" id="statusNet">🌐 Online</div>
+    <div class="status-pill" id="statusSync">☁️ Synced</div>
   </div>
 </div>
 
-<!-- ADD/EDIT NOTE MODAL -->
+<div id="confirmDialog" class="confirm-dialog">
+  <div class="confirm-dialog-content">
+    <div class="confirm-dialog-header">
+      <div class="confirm-dialog-icon">⚠️</div>
+      <div class="confirm-dialog-title">Notra</div>
+    </div>
+    <div class="confirm-dialog-message" id="confirmMessage">
+      Are you sure you want to delete this note?
+    </div>
+    <div class="confirm-dialog-actions">
+      <button class="confirm-cancel" id="confirmCancelBtn">Cancel</button>
+      <button class="confirm-yes" id="confirmYesBtn">Yes</button>
+    </div>
+  </div>
+</div>
+
 <div id="noteModal" class="modal">
   <div class="modal-content">
     <h3 id="noteModalTitle">Add Note</h3>
@@ -736,20 +1022,41 @@ html,body{
     </div>
     
     <div class="modal-actions">
-      <button class="cancelBtn" onclick="window.closeNoteModal()">Cancel</button>
-      <button class="saveBtn" onclick="window.saveNote()">Save</button>
+      <button class="cancelBtn" id="cancelNoteBtn">Cancel</button>
+      <button class="saveBtn" id="saveNoteBtn">Save</button>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script>
-// State management with localStorage (works in Electron apps)
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+// REPLACE WITH YOUR FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyC2mQSgu5pxNk74f7TWafAFzehBgGC2nI4",
+  authDomain: "notra-98c76.firebaseapp.com",
+  projectId: "notra-98c76",
+  storageBucket: "notra-98c76.firebasestorage.app",
+  messagingSenderId: "166720115809",
+  appId: "1:166720115809:web:0049b8dfd7a1301ab5c620",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 let notes = [];
 let currentEditIndex = -1;
 let searchQuery = '';
+let confirmCallback = null;
 
-// DOM elements
+const authSection = document.getElementById('authSection');
+const mainApp = document.getElementById('mainApp');
+const statusBar = document.getElementById('statusBar');
 const backButton = document.getElementById('backButton');
 const appContent = document.getElementById('appContent');
 const versionPage = document.getElementById('versionPage');
@@ -760,85 +1067,332 @@ const previewContent = document.getElementById('previewContent');
 const editorTabs = document.getElementById('editorTabs');
 const markdownCheckbox = document.getElementById('markdownCheckbox');
 
-/* ---------- PERSISTENT STORAGE (localStorage) ---------- */
-function loadNotes() {
-  try {
-    const saved = localStorage.getItem('gsd_notes');
-    if (saved) {
-      notes = JSON.parse(saved);
-      console.log('✅ Notes loaded from localStorage:', notes.length);
-    } else {
-      console.log('📝 No saved notes found. Starting fresh.');
-      notes = [];
-    }
-  } catch (error) {
-    console.error('❌ Error loading notes:', error);
-    notes = [];
+// Auth UI Elements
+const authEmail = document.getElementById('authEmail');
+const authPassword = document.getElementById('authPassword');
+const signInBtn = document.getElementById('signInBtn');
+const signUpBtn = document.getElementById('signUpBtn');
+const authMessage = document.getElementById('authMessage');
+const userEmail = document.getElementById('userEmail');
+const logOutBtn = document.getElementById('logOutBtn');
+const statusSync = document.getElementById('statusSync');
+
+// Show auth message
+function showAuthMessage(message, isError = false) {
+  authMessage.textContent = message;
+  authMessage.className = 'auth-message ' + (isError ? 'error' : 'success');
+  authMessage.style.display = 'block';
+  setTimeout(() => {
+    authMessage.style.display = 'none';
+  }, 5000);
+}
+
+// Sign Up
+signUpBtn.onclick = async function() {
+  const email = authEmail.value.trim();
+  const password = authPassword.value.trim();
+  
+  if (!email || !password) {
+    showAuthMessage('Please enter email and password', true);
+    return;
   }
+  
+  if (password.length < 6) {
+    showAuthMessage('Password must be at least 6 characters', true);
+    return;
+  }
+  
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    showAuthMessage('Account created successfully!');
+  } catch (error) {
+    console.error('Sign up error:', error);
+    showAuthMessage(error.message, true);
+  }
+};
+
+// Sign In
+signInBtn.onclick = async function() {
+  const email = authEmail.value.trim();
+  const password = authPassword.value.trim();
+  
+  if (!email || !password) {
+    showAuthMessage('Please enter email and password', true);
+    return;
+  }
+  
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    showAuthMessage('Signed in successfully!');
+  } catch (error) {
+    console.error('Sign in error:', error);
+    showAuthMessage(error.message, true);
+  }
+};
+
+// Log Out
+logOutBtn.onclick = async function() {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error('Sign out error:', error);
+  }
+};
+
+// Listen to auth state changes
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    // User logged in
+    authSection.style.display = 'none';
+    mainApp.style.display = 'flex';
+    statusBar.style.display = 'flex';
+    userEmail.textContent = user.email;
+    
+    // Load notes
+    await loadNotes();
+  } else {
+    // User logged out
+    authSection.style.display = 'block';
+    mainApp.style.display = 'none';
+    statusBar.style.display = 'none';
+    notes = [];
+    renderNotes();
+    
+    // Clear auth inputs
+    authEmail.value = '';
+    authPassword.value = '';
+  }
+});
+
+// Save note (local + cloud)
+async function saveNote() {
+  const titleInput = document.getElementById('noteTitle');
+  const title = titleInput.value.trim();
+  const content = noteContentTextarea.value.trim();
+  const isMarkdown = markdownCheckbox.checked;
+  
+  if (!title) {
+    titleInput.classList.add('error');
+    setTimeout(function() {
+      titleInput.classList.remove('error');
+      titleInput.focus();
+    }, 1500);
+    return;
+  }
+  
+  const noteData = {
+    title: title,
+    content: content,
+    isMarkdown: isMarkdown,
+    updatedAt: Date.now()
+  };
+  
+  // Update local array
+  if (currentEditIndex === -1) {
+    noteData.id = Date.now().toString();
+    notes.push(noteData);
+  } else {
+    noteData.id = notes[currentEditIndex].id;
+    notes[currentEditIndex] = noteData;
+  }
+  
+  // Save to localStorage
+  localStorage.setItem(`note_${noteData.id}`, JSON.stringify(noteData));
+  
+  // Save to Firebase
+  if (auth.currentUser) {
+    try {
+      statusSync.textContent = '⏳ Syncing...';
+      await setDoc(
+        doc(db, 'users', auth.currentUser.uid, 'notes', noteData.id),
+        noteData
+      );
+      statusSync.textContent = '☁️ Synced';
+      console.log('Note synced to cloud');
+    } catch (error) {
+      console.error('Cloud sync failed:', error);
+      statusSync.textContent = '⚠️ Sync Failed';
+    }
+  }
+  
+  closeNoteModal();
   renderNotes();
 }
 
-function saveNotesToStorage() {
-  try {
-    localStorage.setItem('gsd_notes', JSON.stringify(notes));
-    console.log('💾 Notes saved to localStorage:', notes.length);
-  } catch (error) {
-    console.error('❌ Error saving notes:', error);
-    alert('Error saving notes! Please check console.');
+// Load all notes
+async function loadNotes() {
+  // 1. Load from localStorage first
+  const localNotes = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('note_')) {
+      try {
+        const note = JSON.parse(localStorage.getItem(key));
+        localNotes.push(note);
+      } catch (e) {
+        console.error('Error parsing note:', e);
+      }
+    }
+  }
+  
+  notes = localNotes;
+  renderNotes();
+  
+  // 2. Sync with cloud if logged in
+  if (auth.currentUser) {
+    try {
+      statusSync.textContent = '⏳ Syncing...';
+      const notesRef = collection(db, 'users', auth.currentUser.uid, 'notes');
+      const q = query(notesRef, orderBy('updatedAt', 'desc'));
+      const snapshot = await getDocs(q);
+      
+      const cloudNotes = [];
+      snapshot.forEach(doc => {
+        cloudNotes.push(doc.data());
+      });
+      
+      // Merge: use cloud version if it's newer
+      const merged = mergeNotes(localNotes, cloudNotes);
+      
+      // Update localStorage with cloud data
+      merged.forEach(note => {
+        localStorage.setItem(`note_${note.id}`, JSON.stringify(note));
+      });
+      
+      notes = merged;
+      renderNotes();
+      statusSync.textContent = '☁️ Synced';
+      console.log('Notes synced from cloud');
+    } catch (error) {
+      console.error('Cloud load failed:', error);
+      statusSync.textContent = '⚠️ Sync Failed';
+    }
   }
 }
 
-/* ---------- NAVIGATION ---------- */
-document.getElementById('softwareVersionBtn').onclick = () => {
+// Merge local and cloud notes
+function mergeNotes(localNotes, cloudNotes) {
+  const notesMap = new Map();
+  
+  // Add local notes
+  localNotes.forEach(note => {
+    notesMap.set(note.id, note);
+  });
+  
+  // Override with cloud notes if they're newer
+  cloudNotes.forEach(note => {
+    const existing = notesMap.get(note.id);
+    if (!existing || note.updatedAt > existing.updatedAt) {
+      notesMap.set(note.id, note);
+    }
+  });
+  
+  return Array.from(notesMap.values());
+}
+
+// Delete note
+async function handleDelete(index) {
+  showConfirmDialog('Are you sure you want to delete this note?', async function() {
+    const noteId = notes[index].id;
+    
+    // Remove from array
+    notes.splice(index, 1);
+    
+    // Delete from localStorage
+    localStorage.removeItem(`note_${noteId}`);
+    
+    // Delete from Firebase
+    if (auth.currentUser) {
+      try {
+        statusSync.textContent = '⏳ Syncing...';
+        await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'notes', noteId));
+        statusSync.textContent = '☁️ Synced';
+        console.log('Note deleted from cloud');
+      } catch (error) {
+        console.error('Cloud delete failed:', error);
+        statusSync.textContent = '⚠️ Sync Failed';
+      }
+    }
+    
+    renderNotes();
+  });
+}
+
+function showConfirmDialog(message, callback) {
+  document.getElementById('confirmMessage').textContent = message;
+  document.getElementById('confirmDialog').style.display = 'flex';
+  confirmCallback = callback;
+}
+
+function closeConfirmDialog() {
+  document.getElementById('confirmDialog').style.display = 'none';
+  confirmCallback = null;
+}
+
+function confirmDialogYes() {
+  if (confirmCallback) {
+    confirmCallback();
+  }
+  closeConfirmDialog();
+}
+
+document.getElementById('confirmCancelBtn').onclick = closeConfirmDialog;
+document.getElementById('confirmYesBtn').onclick = confirmDialogYes;
+
+document.getElementById('softwareVersionBtn').onclick = function() {
   appContent.querySelector('.panel').style.display = 'none';
   versionPage.style.display = 'block';
   backButton.style.display = 'inline-block';
 };
 
-backButton.onclick = () => {
+backButton.onclick = function() {
   appContent.querySelector('.panel').style.display = '';
   versionPage.style.display = 'none';
   backButton.style.display = 'none';
 };
 
-// Sidebar action handlers
-document.querySelectorAll('.sidebar-action[data-url]').forEach(action => {
-  action.onclick = () => {
+document.querySelectorAll('.sidebar-action[data-url]').forEach(function(action) {
+  action.onclick = function() {
     const url = action.getAttribute('data-url');
     if (url) window.open(url, '_blank');
   };
 });
 
-/* ---------- STATUS ---------- */
 const statusNet = document.getElementById('statusNet');
 statusNet.textContent = navigator.onLine ? '🌐 Online' : '🔴 Offline';
-window.addEventListener('online', () => statusNet.textContent = '🌐 Online');
-window.addEventListener('offline', () => statusNet.textContent = '🔴 Offline');
+window.addEventListener('online', function() {
+  statusNet.textContent = '🌐 Online';
+});
+window.addEventListener('offline', function() {
+  statusNet.textContent = '🔴 Offline';
+});
 
-/* ---------- MARKDOWN CHECKBOX ---------- */
-markdownCheckbox.addEventListener('change', () => {
+markdownCheckbox.addEventListener('change', function() {
   if (markdownCheckbox.checked) {
     editorTabs.style.display = 'flex';
   } else {
     editorTabs.style.display = 'none';
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
     document.querySelector('.tab[data-tab="write"]').classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(content => {
+    document.querySelectorAll('.tab-content').forEach(function(content) {
       content.classList.remove('active');
     });
     document.getElementById('writeTab').classList.add('active');
   }
 });
 
-/* ---------- TABS ---------- */
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
     const tabName = tab.getAttribute('data-tab');
     
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
     tab.classList.add('active');
     
-    document.querySelectorAll('.tab-content').forEach(content => {
+    document.querySelectorAll('.tab-content').forEach(function(content) {
       content.classList.remove('active');
     });
     
@@ -865,41 +1419,37 @@ function updatePreview() {
   }
 }
 
-noteContentTextarea.addEventListener('input', () => {
+noteContentTextarea.addEventListener('input', function() {
   if (markdownCheckbox.checked && document.querySelector('.tab[data-tab="preview"]').classList.contains('active')) {
     updatePreview();
   }
 });
 
-/* ---------- NOTES RENDERING ---------- */
 function renderNotes() {
   grid.innerHTML = '';
   
   let filteredNotes = notes;
   
   if (searchQuery) {
-    filteredNotes = notes.filter((n, i) => {
+    filteredNotes = notes.filter(function(n) {
       const searchText = (n.title + ' ' + n.content).toLowerCase();
       return searchText.includes(searchQuery.toLowerCase());
     });
   }
   
   if (filteredNotes.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1">
-        <div>📝</div>
-        <div>${searchQuery ? 'No notes found' : 'No notes yet. Click "+ Add Note" to create one!'}</div>
-      </div>
-    `;
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div>📝</div><div>' + (searchQuery ? 'No notes found' : 'No notes yet. Click "+ Add Note" to create one!') + '</div></div>';
     return;
   }
   
-  filteredNotes.forEach((n) => {
+  filteredNotes.forEach(function(n) {
     const actualIndex = notes.indexOf(n);
     const div = document.createElement('div');
     div.className = 'note';
     
+    let titleHTML = escapeHtml(n.title);
     let contentHTML = n.content;
+    
     if (n.isMarkdown && typeof marked !== 'undefined') {
       contentHTML = marked.parse(n.content);
     } else {
@@ -907,21 +1457,17 @@ function renderNotes() {
     }
     
     if (searchQuery) {
-      const regex = new RegExp(`(${escapeRegex(searchQuery)})`, 'gi');
-      contentHTML = contentHTML.replace(regex, '<span class="highlight">$1</span>');
+      const regex = new RegExp('(' + escapeRegex(searchQuery) + ')', 'gi');
+      titleHTML = titleHTML.replace(regex, '<span class="highlight">$1</span>');
+      
+      if (!n.isMarkdown) {
+        contentHTML = contentHTML.replace(regex, '<span class="highlight">$1</span>');
+      }
     }
     
     const mdBadge = n.isMarkdown ? '<span class="note-md-badge active">MD</span>' : '';
     
-    div.innerHTML = `
-      <div class="note-controls">
-        ${mdBadge}
-        <span onclick="window.handleEdit(${actualIndex})" title="Edit">✏️</span>
-        <span onclick="window.handleDelete(${actualIndex})" title="Delete">🗑️</span>
-      </div>
-      <div class="note-title">${escapeHtml(n.title)}</div>
-      <div class="note-content">${contentHTML}</div>
-    `;
+    div.innerHTML = '<div class="note-controls">' + mdBadge + '<span onclick="handleEdit(' + actualIndex + ')" title="Edit">✏️</span><span onclick="handleDelete(' + actualIndex + ')" title="Delete">🗑️</span></div><div class="note-title">' + titleHTML + '</div><div class="note-content">' + contentHTML + '</div>';
     
     grid.appendChild(div);
   });
@@ -937,14 +1483,12 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/* ---------- SEARCH ---------- */
-searchInput.oninput = e => {
+searchInput.oninput = function(e) {
   searchQuery = e.target.value;
   renderNotes();
 };
 
-/* ---------- NOTE MODAL ---------- */
-document.getElementById('addNote').onclick = () => {
+document.getElementById('addNote').onclick = function() {
   currentEditIndex = -1;
   document.getElementById('noteModalTitle').textContent = 'Add Note';
   document.getElementById('noteTitle').value = '';
@@ -952,16 +1496,18 @@ document.getElementById('addNote').onclick = () => {
   markdownCheckbox.checked = false;
   editorTabs.style.display = 'none';
   
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.classList.remove('active');
+  });
   document.querySelector('.tab[data-tab="write"]').classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(content => {
+  document.querySelectorAll('.tab-content').forEach(function(content) {
     content.classList.remove('active');
   });
   document.getElementById('writeTab').classList.add('active');
   
   document.getElementById('noteModal').style.display = 'flex';
   
-  setTimeout(() => {
+  setTimeout(function() {
     document.getElementById('noteTitle').focus();
   }, 100);
 };
@@ -972,31 +1518,7 @@ function closeNoteModal() {
   noteContentTextarea.value = '';
   markdownCheckbox.checked = false;
   currentEditIndex = -1;
-}
-
-function saveNote() {
-  const titleInput = document.getElementById('noteTitle');
-  const title = titleInput.value.trim();
-  const content = noteContentTextarea.value.trim();
-  const isMarkdown = markdownCheckbox.checked;
-  
-  if (!title) {
-    alert('Please enter a note title');
-    setTimeout(() => {
-      titleInput.focus();
-    }, 100);
-    return;
-  }
-  
-  if (currentEditIndex === -1) {
-    notes.push({ title, content, isMarkdown });
-  } else {
-    notes[currentEditIndex] = { title, content, isMarkdown };
-  }
-  
-  saveNotesToStorage();
-  closeNoteModal();
-  renderNotes();
+  document.getElementById('noteTitle').classList.remove('error');
 }
 
 function handleEdit(index) {
@@ -1012,45 +1534,39 @@ function handleEdit(index) {
     editorTabs.style.display = 'none';
   }
   
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.classList.remove('active');
+  });
   document.querySelector('.tab[data-tab="write"]').classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(content => {
+  document.querySelectorAll('.tab-content').forEach(function(content) {
     content.classList.remove('active');
   });
   document.getElementById('writeTab').classList.add('active');
   
   document.getElementById('noteModal').style.display = 'flex';
   
-  setTimeout(() => {
+  setTimeout(function() {
     document.getElementById('noteTitle').focus();
   }, 100);
 }
 
-function handleDelete(index) {
-  if (confirm('Are you sure you want to delete this note?')) {
-    notes.splice(index, 1);
-    saveNotesToStorage();
-    renderNotes();
-  }
-}
-
 window.handleEdit = handleEdit;
 window.handleDelete = handleDelete;
-window.closeNoteModal = closeNoteModal;
-window.saveNote = saveNote;
 
-/* ---------- DOWNLOAD ---------- */
-document.getElementById('downloadNote').onclick = () => {
+document.getElementById('cancelNoteBtn').onclick = closeNoteModal;
+document.getElementById('saveNoteBtn').onclick = saveNote;
+
+document.getElementById('downloadNote').onclick = function() {
   if (notes.length === 0) {
-    alert('No notes to export');
+    showConfirmDialog('No notes to export', function() {});
     return;
   }
   
   let content = 'NOTRA - NOTES EXPORT\n';
   content += '================================\n\n';
   
-  notes.forEach((n, i) => {
-    content += `${i + 1}. ${n.title}`;
+  notes.forEach(function(n, i) {
+    content += (i + 1) + '. ' + n.title;
     if (n.isMarkdown) content += ' [Markdown]';
     content += '\n';
     content += '-'.repeat(n.title.length + 3) + '\n';
@@ -1068,15 +1584,13 @@ document.getElementById('downloadNote').onclick = () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `gsd-notes-${new Date().toISOString().split('T')[0]}.txt`;
+  a.download = 'notra-notes-' + new Date().toISOString().split('T')[0] + '.txt';
   a.click();
   URL.revokeObjectURL(url);
 };
 
-/* ---------- INITIALIZE APP ---------- */
-loadNotes();
-console.log('✨ Notra app initialized!');
-console.log('💾 Storage: localStorage (works in Electron & browsers)');
+console.log('✨ Notra app initialized with Firebase!');
+console.log('💾 Storage: localStorage + Firebase Cloud Sync');
 </script>
 
 </body>
