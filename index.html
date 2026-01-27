@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <title>Notra</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="Notra Icon-1024.png">
@@ -19,6 +19,9 @@
   --highlight:#7f5fff;
   --sidebar-collapsed:70px;
   --sidebar-expanded:280px;
+  --success:#4ade80;
+  --warning:#fbbf24;
+  --danger:#f87171;
 }
 
 *{box-sizing:border-box}
@@ -33,6 +36,7 @@ html,body{
     var(--bg);
   color:var(--text);
   overflow:hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .app-container{
@@ -377,6 +381,7 @@ html,body{
   align-items:center;
   gap:12px;
   z-index:50;
+  flex-wrap:wrap;
 }
 
 .status-pill{
@@ -428,6 +433,7 @@ html,body{
   justify-content:center;
   z-index:1000;
   backdrop-filter:blur(4px);
+  padding:20px;
 }
 
 .modal-content{
@@ -436,7 +442,7 @@ html,body{
   border:1px solid var(--border);
   padding:28px;
   max-width:600px;
-  width:90%;
+  width:100%;
   max-height:80vh;
   overflow-y:auto;
   box-shadow:0 30px 80px rgba(0,0,0,.8);
@@ -530,6 +536,7 @@ html,body{
   justify-content:flex-end;
   gap:12px;
   margin-top:24px;
+  flex-wrap:wrap;
 }
 
 .modal-actions button{
@@ -539,6 +546,8 @@ html,body{
   font-weight:600;
   cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
+  flex:1;
+  min-width:100px;
 }
 
 .modal-actions .cancelBtn{
@@ -564,6 +573,7 @@ html,body{
   justify-content:center;
   z-index:2000;
   backdrop-filter:blur(4px);
+  padding:20px;
 }
 
 .confirm-dialog-content{
@@ -572,7 +582,7 @@ html,body{
   border:1px solid var(--border);
   padding:28px;
   max-width:400px;
-  width:90%;
+  width:100%;
   box-shadow:0 30px 80px rgba(0,0,0,.8);
 }
 
@@ -604,6 +614,7 @@ html,body{
   display:flex;
   justify-content:flex-end;
   gap:12px;
+  flex-wrap:wrap;
 }
 
 .confirm-dialog-actions button{
@@ -613,6 +624,8 @@ html,body{
   font-weight:600;
   cursor:pointer;
   transition:transform .15s ease, box-shadow .15s ease;
+  flex:1;
+  min-width:100px;
 }
 
 .confirm-dialog-actions .confirm-cancel{
@@ -804,28 +817,53 @@ html,body{
   align-items:center;
   gap:12px;
   padding:8px 0;
+  flex-wrap:wrap;
 }
 
 .user-info button{
-  padding:6px 16px;
+  padding:8px 16px;
   border-radius:999px;
   border:none;
-  background:rgba(255,68,68,.2);
-  color:#ff6666;
-  font-size:12px;
+  font-size:13px;
   font-weight:600;
   cursor:pointer;
   transition:all .3s ease;
 }
 
+.user-info button:first-of-type{
+  background:rgba(77,195,255,.2);
+  color:var(--accent);
+}
+
+.user-info button:last-of-type{
+  background:rgba(255,68,68,.2);
+  color:#ff6666;
+}
+
 .user-info button:hover{
-  background:rgba(255,68,68,.3);
   transform:scale(1.05);
 }
 
-/* ===== AUTH INPUTS (MATCH BLUE PULSING STYLE) ===== */
+/* Profile Picture */
+.profile-pic{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--accent);
+  box-shadow:0 0 12px rgba(77,195,255,.3);
+}
+
+.username-display{
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+}
+
+/* ===== AUTH INPUTS ===== */
 #authSection input[type="email"],
-#authSection input[type="password"]{
+#authSection input[type="password"],
+#authSection input[type="text"]{
   width:100%;
   padding:12px 16px;
   border-radius:10px;
@@ -839,13 +877,15 @@ html,body{
 }
 
 #authSection input[type="email"]:focus,
-#authSection input[type="password"]:focus{
+#authSection input[type="password"]:focus,
+#authSection input[type="text"]:focus{
   outline:none;
   border-color:var(--accent);
   box-shadow:0 0 20px rgba(77,195,255,.3);
   animation:focusPulse 1.5s ease-in-out infinite;
 }
-/* ===== AUTH BUTTONS (FLOAT + SHADOW LIKE OTHER BUTTONS) ===== */
+
+/* ===== AUTH BUTTONS ===== */
 .auth-btn{
   flex:1;
   padding:12px;
@@ -855,6 +895,7 @@ html,body{
   cursor:pointer;
   font-size:14px;
   transition:transform .15s ease, box-shadow .15s ease;
+  min-width:120px;
 }
 
 .auth-btn.primary{
@@ -872,31 +913,476 @@ html,body{
   box-shadow:0 0 18px rgba(77,195,255,.6);
 }
 
+/* ===== SETTINGS PAGE ===== */
+#settingsPage{
+  display:none;
+}
+
+.settings-grid{
+  display:grid;
+  gap:20px;
+  max-width:800px;
+  margin:0 auto;
+}
+
+.settings-section{
+  background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  border-radius:16px;
+  padding:24px;
+  border:1px solid var(--border);
+  box-shadow:0 12px 40px rgba(0,0,0,.3);
+}
+
+.settings-section-title{
+  font-size:18px;
+  font-weight:700;
+  color:var(--accent);
+  margin:0 0 20px 0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.settings-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.settings-item:last-child{
+  border-bottom:none;
+}
+
+.settings-item-info{
+  flex:1;
+}
+
+.settings-item-label{
+  font-weight:600;
+  font-size:15px;
+  color:var(--text);
+  margin-bottom:4px;
+}
+
+.settings-item-desc{
+  font-size:13px;
+  color:var(--muted);
+}
+
+.settings-item-control{
+  margin-left:20px;
+}
+
+/* Custom Toggle Switch */
+.toggle-switch{
+  position:relative;
+  width:56px;
+  height:30px;
+  background:rgba(255,255,255,.1);
+  border-radius:999px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+.toggle-switch.active{
+  background:linear-gradient(135deg,var(--accent),var(--highlight));
+  border-color:var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.4);
+}
+
+.toggle-switch-slider{
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:22px;
+  height:22px;
+  background:white;
+  border-radius:50%;
+  transition:all .3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+
+.toggle-switch.active .toggle-switch-slider{
+  left:29px;
+}
+
+/* Profile Picture Upload */
+.profile-pic-upload{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:20px 0;
+}
+
+.profile-pic-large{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.3);
+}
+
+.profile-pic-placeholder{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--highlight));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  font-weight:700;
+  color:white;
+  border:3px solid var(--accent);
+  box-shadow:0 0 20px rgba(77,195,255,.3);
+}
+
+.profile-pic-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.profile-pic-actions button{
+  padding:10px 20px;
+  border-radius:999px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+  font-size:13px;
+}
+
+.profile-pic-actions button:first-child{
+  background:var(--accent);
+  color:#06101f;
+}
+
+.profile-pic-actions button:last-child{
+  background:rgba(255,68,68,.2);
+  color:#ff6666;
+}
+
+.profile-pic-actions button:hover{
+  transform:scale(1.06);
+}
+
+.profile-pic-actions input[type="file"]{
+  display:none;
+}
+
+/* Settings Buttons */
+.settings-button{
+  padding:12px 24px;
+  border-radius:999px;
+  border:none;
+  background:var(--accent);
+  color:#06101f;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+  font-size:14px;
+}
+
+.settings-button:hover{
+  transform:scale(1.06);
+  box-shadow:0 0 18px rgba(77,195,255,.6);
+}
+
+.settings-button.danger{
+  background:rgba(255,68,68,.3);
+  color:#ff6666;
+}
+
+/* ===================== MOBILE RESPONSIVE STYLES ===================== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 1000;
+    transition: left .3s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,.5);
+  }
+  
+  .sidebar.mobile-open {
+    left: 0;
+  }
+  
+  .sidebar.mobile-open .sidebar-action-content {
+    opacity: 1;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(77,195,255,.4);
+    transition: transform .2s ease;
+  }
+  
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+  }
+  
+  .sidebar-overlay.active {
+    display: block;
+  }
+  
+  .content-area {
+    width: 100%;
+  }
+  
+  .content-header {
+    padding: 15px 20px;
+  }
+  
+  .content-header h2 {
+    font-size: 20px;
+  }
+  
+  .workspace {
+    padding: 20px 15px;
+  }
+  
+  .panel {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  
+  .notes-toolbar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .notes-toolbar input {
+    min-width: 100%;
+    width: 100%;
+  }
+  
+  .notes-toolbar button {
+    width: 100%;
+    padding: 14px 20px;
+  }
+  
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .status-bar-container {
+    padding: 10px 15px;
+    justify-content: center;
+  }
+  
+  .status-pill {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+  .modal {
+    padding: 10px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .modal-content h3 {
+    font-size: 18px;
+  }
+  
+  .modal-content textarea {
+    min-height: 150px;
+  }
+  
+  .confirm-dialog {
+    padding: 10px;
+  }
+  
+  .confirm-dialog-content {
+    padding: 20px;
+  }
+  
+  .user-info {
+    font-size: 12px;
+  }
+  
+  .username-display {
+    font-size: 12px !important;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .auth-panel {
+    margin: 20px;
+  }
+  
+  #versionPage {
+    padding: 40px 20px;
+  }
+  
+  #versionPage p {
+    font-size: 16px;
+  }
+  
+  #versionPage .version-logo {
+    width: 150px;
+    height: 150px;
+    font-size: 36px;
+  }
+  
+  .tabs {
+    gap: 4px;
+  }
+  
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .empty-state div:first-child {
+    font-size: 40px;
+  }
+  
+  .empty-state div:last-child {
+    font-size: 14px;
+  }
+  
+  .settings-grid {
+    padding: 0;
+  }
+  
+  .settings-section {
+    padding: 20px;
+  }
+  
+  .settings-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .settings-item-control {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .profile-pic-upload {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-pic-actions {
+    width: 100%;
+  }
+  
+  .profile-pic-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-header h2 {
+    font-size: 18px;
+  }
+  
+  .workspace {
+    padding: 15px 10px;
+  }
+  
+  .panel {
+    padding: 12px;
+  }
+  
+  .modal-content {
+    padding: 16px;
+  }
+  
+  .notes-toolbar button {
+    font-size: 13px;
+  }
+  
+  .note-title {
+    font-size: 14px;
+    padding-right: 80px;
+  }
+  
+  .note-content {
+    font-size: 13px;
+  }
+  
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .modal-content textarea {
+    min-height: 100px;
+  }
+  
+  .workspace {
+    padding: 15px;
+  }
+}
+
 </style>
 </head>
 
 <body>
 
+<button class="mobile-menu-btn" id="mobileMenuBtn" style="display:none;">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="app-container">
-  <!-- Auth Section (shows when not logged in) -->
+  <!-- Auth Section -->
   <div id="authSection">
     <div class="workspace">
       <div class="auth-panel panel">
         <h2 style="text-align:center; margin-bottom:24px;">Welcome to Notra</h2>
         <div id="authMessage" class="auth-message" style="display:none;"></div>
         
-        <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPassword" placeholder="Password">
+        <input type="email" id="authEmail" placeholder="Email" style="display:block;">
+        <input type="password" id="authPassword" placeholder="Password" style="display:block;">
+        <input type="text" id="authUsername" placeholder="Username" style="display:none;">
         
-        <div style="display:flex; gap:12px; margin-top:20px;">
-          <button id="signInBtn" class="auth-btn primary">
-             Sign In
-          </button>
-
-          <button id="signUpBtn" class="auth-btn secondary">
-            Sign Up
-          </button>
-
+        <div style="display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;">
+          <button id="signInBtn" class="auth-btn primary">Sign In</button>
+          <button id="signUpBtn" class="auth-btn secondary">Sign Up</button>
         </div>
         
         <div class="auth-toggle">
@@ -906,9 +1392,9 @@ html,body{
     </div>
   </div>
 
-  <!-- Main App (shows when logged in) -->
+  <!-- Main App -->
   <div class="main-layout" id="mainApp" style="display:none;">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h1>NOTRA</h1>
       </div>
@@ -945,10 +1431,12 @@ html,body{
 
     <div class="content-area">
       <div class="content-header">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2>📝 My Notes</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <h2 id="pageTitle">📝 My Notes</h2>
           <div class="user-info">
-            <span id="userEmail" style="font-size:14px; color:var(--muted);"></span>
+            <img id="userProfilePic" class="profile-pic" style="display:none;">
+            <span id="usernameDisplay" class="username-display"></span>
+            <button id="settingsBtn">⚙️ Settings</button>
             <button id="logOutBtn">Log Out</button>
           </div>
         </div>
@@ -957,7 +1445,8 @@ html,body{
       <div class="workspace" id="appContent">
         <button id="backButton">← Back</button>
         
-        <div class="panel">
+        <!-- Notes Page -->
+        <div class="panel" id="notesPanel">
           <div class="notes-toolbar">
             <input id="searchNotes" placeholder="🔍 Search notes...">
             <button id="addNote">+ Add Note</button>
@@ -966,9 +1455,153 @@ html,body{
           <div class="notes-grid" id="notesGrid"></div>
         </div>
 
+        <!-- Version Page -->
         <div id="versionPage">
           <p>Your software is running Notra - Version 4.2.1 (Cloud Sync)</p>
           <div class="version-logo">NOTRA</div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage">
+          <div class="settings-grid">
+            <!-- Profile Section -->
+            <div class="settings-section">
+              <div class="settings-section-title">
+                <span>👤</span>
+                <span>Profile</span>
+              </div>
+              
+              <div class="profile-pic-upload">
+                <img id="settingsProfilePic" class="profile-pic-large" style="display:none;">
+                <div id="settingsProfilePlaceholder" class="profile-pic-placeholder">U</div>
+                <div class="profile-pic-actions">
+                  <button onclick="document.getElementById('profilePicInput').click()">Upload Picture</button>
+                  <button id="removeProfilePicBtn">Remove Picture</button>
+                  <input type="file" id="profilePicInput" accept="image/*">
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="settings-section">
+              <div class="settings-section-title">
+                <span>🔐</span>
+                <span>Account</span>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Username</div>
+                  <div class="settings-item-desc">Change your display name</div>
+                </div>
+                <div class="settings-item-control">
+                  <button class="settings-button" id="editUsernameBtn">Edit</button>
+                </div>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Password</div>
+                  <div class="settings-item-desc">Update your password</div>
+                </div>
+                <div class="settings-item-control">
+                  <button class="settings-button" id="editPasswordBtn">Change</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Editor Preferences -->
+            <div class="settings-section">
+              <div class="settings-section-title">
+                <span>✏️</span>
+                <span>Editor</span>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Markdown Everywhere</div>
+                  <div class="settings-item-desc">Enable markdown for all new notes by default</div>
+                </div>
+                <div class="settings-item-control">
+                  <div class="toggle-switch" id="markdownEverywhereToggle">
+                    <div class="toggle-switch-slider"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Auto-Save</div>
+                  <div class="settings-item-desc">Automatically save notes while typing</div>
+                </div>
+                <div class="settings-item-control">
+                  <div class="toggle-switch active" id="autoSaveToggle">
+                    <div class="toggle-switch-slider"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Appearance -->
+            <div class="settings-section">
+              <div class="settings-section-title">
+                <span>🎨</span>
+                <span>Appearance</span>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Compact Mode</div>
+                  <div class="settings-item-desc">Show more notes in less space</div>
+                </div>
+                <div class="settings-item-control">
+                  <div class="toggle-switch" id="compactModeToggle">
+                    <div class="toggle-switch-slider"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Show Line Numbers</div>
+                  <div class="settings-item-desc">Display line numbers in editor</div>
+                </div>
+                <div class="settings-item-control">
+                  <div class="toggle-switch" id="lineNumbersToggle">
+                    <div class="toggle-switch-slider"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data & Privacy -->
+            <div class="settings-section">
+              <div class="settings-section-title">
+                <span>🔒</span>
+                <span>Data & Privacy</span>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Export All Data</div>
+                  <div class="settings-item-desc">Download all your notes and settings</div>
+                </div>
+                <div class="settings-item-control">
+                  <button class="settings-button" id="exportAllBtn">Export</button>
+                </div>
+              </div>
+              
+              <div class="settings-item">
+                <div class="settings-item-info">
+                  <div class="settings-item-label">Clear Cache</div>
+                  <div class="settings-item-desc">Clear local cached data</div>
+                </div>
+                <div class="settings-item-control">
+                  <button class="settings-button danger" id="clearCacheBtn">Clear</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -981,6 +1614,7 @@ html,body{
   </div>
 </div>
 
+<!-- Confirm Dialog -->
 <div id="confirmDialog" class="confirm-dialog">
   <div class="confirm-dialog-content">
     <div class="confirm-dialog-header">
@@ -997,6 +1631,7 @@ html,body{
   </div>
 </div>
 
+<!-- Note Modal -->
 <div id="noteModal" class="modal">
   <div class="modal-content">
     <h3 id="noteModalTitle">Add Note</h3>
@@ -1029,13 +1664,38 @@ html,body{
   </div>
 </div>
 
+<!-- Edit Username Modal -->
+<div id="usernameModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Username</h3>
+    <input type="text" id="newUsername" placeholder="Enter new username">
+    <div class="modal-actions">
+      <button class="cancelBtn" id="cancelUsernameBtn">Cancel</button>
+      <button class="saveBtn" id="saveUsernameBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Password Modal -->
+<div id="passwordModal" class="modal">
+  <div class="modal-content">
+    <h3>Change Password</h3>
+    <input type="password" id="currentPassword" placeholder="Current password">
+    <input type="password" id="newPassword" placeholder="New password">
+    <input type="password" id="confirmPassword" placeholder="Confirm new password">
+    <div class="modal-actions">
+      <button class="cancelBtn" id="cancelPasswordBtn">Cancel</button>
+      <button class="saveBtn" id="savePasswordBtn">Save</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, query, orderBy, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-// REPLACE WITH YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyC2mQSgu5pxNk74f7TWafAFzehBgGC2nI4",
   authDomain: "notra-98c76.firebaseapp.com",
@@ -1045,7 +1705,6 @@ const firebaseConfig = {
   appId: "1:166720115809:web:0049b8dfd7a1301ab5c620",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -1054,31 +1713,95 @@ let notes = [];
 let currentEditIndex = -1;
 let searchQuery = '';
 let confirmCallback = null;
+let isSignUpMode = false;
+let userSettings = {
+  markdownEverywhere: false,
+  autoSave: true,
+  compactMode: false,
+  lineNumbers: false
+};
 
+// DOM Elements
 const authSection = document.getElementById('authSection');
 const mainApp = document.getElementById('mainApp');
 const statusBar = document.getElementById('statusBar');
 const backButton = document.getElementById('backButton');
-const appContent = document.getElementById('appContent');
+const notesPanel = document.getElementById('notesPanel');
 const versionPage = document.getElementById('versionPage');
+const settingsPage = document.getElementById('settingsPage');
+const pageTitle = document.getElementById('pageTitle');
 const grid = document.getElementById('notesGrid');
 const searchInput = document.getElementById('searchNotes');
 const noteContentTextarea = document.getElementById('noteContent');
 const previewContent = document.getElementById('previewContent');
 const editorTabs = document.getElementById('editorTabs');
 const markdownCheckbox = document.getElementById('markdownCheckbox');
-
-// Auth UI Elements
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
 const authEmail = document.getElementById('authEmail');
 const authPassword = document.getElementById('authPassword');
+const authUsername = document.getElementById('authUsername');
 const signInBtn = document.getElementById('signInBtn');
 const signUpBtn = document.getElementById('signUpBtn');
 const authMessage = document.getElementById('authMessage');
-const userEmail = document.getElementById('userEmail');
+const usernameDisplay = document.getElementById('usernameDisplay');
+const userProfilePic = document.getElementById('userProfilePic');
+const settingsBtn = document.getElementById('settingsBtn');
 const logOutBtn = document.getElementById('logOutBtn');
 const statusSync = document.getElementById('statusSync');
 
-// Show auth message
+// Settings Elements
+const settingsProfilePic = document.getElementById('settingsProfilePic');
+const settingsProfilePlaceholder = document.getElementById('settingsProfilePlaceholder');
+const profilePicInput = document.getElementById('profilePicInput');
+const removeProfilePicBtn = document.getElementById('removeProfilePicBtn');
+const editUsernameBtn = document.getElementById('editUsernameBtn');
+const editPasswordBtn = document.getElementById('editPasswordBtn');
+const markdownEverywhereToggle = document.getElementById('markdownEverywhereToggle');
+const autoSaveToggle = document.getElementById('autoSaveToggle');
+const compactModeToggle = document.getElementById('compactModeToggle');
+const lineNumbersToggle = document.getElementById('lineNumbersToggle');
+const exportAllBtn = document.getElementById('exportAllBtn');
+const clearCacheBtn = document.getElementById('clearCacheBtn');
+
+// Mobile
+function isMobile() {
+  return window.innerWidth <= 768;
+}
+
+function updateMobileUI() {
+  if (isMobile()) {
+    mobileMenuBtn.style.display = 'block';
+  } else {
+    mobileMenuBtn.style.display = 'none';
+    sidebar.classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('active');
+  }
+}
+
+mobileMenuBtn.onclick = function() {
+  sidebar.classList.toggle('mobile-open');
+  sidebarOverlay.classList.toggle('active');
+};
+
+sidebarOverlay.onclick = function() {
+  sidebar.classList.remove('mobile-open');
+  sidebarOverlay.classList.remove('active');
+};
+
+document.querySelectorAll('.sidebar-action').forEach(function(action) {
+  action.addEventListener('click', function() {
+    if (isMobile()) {
+      sidebar.classList.remove('mobile-open');
+      sidebarOverlay.classList.remove('active');
+    }
+  });
+});
+
+window.addEventListener('resize', updateMobileUI);
+
+// Auth Messages
 function showAuthMessage(message, isError = false) {
   authMessage.textContent = message;
   authMessage.className = 'auth-message ' + (isError ? 'error' : 'success');
@@ -1088,13 +1811,23 @@ function showAuthMessage(message, isError = false) {
   }, 5000);
 }
 
-// Sign Up
+// Sign Up Flow
 signUpBtn.onclick = async function() {
+  if (!isSignUpMode) {
+    // Show username field
+    authUsername.style.display = 'block';
+    signUpBtn.textContent = 'Create Account';
+    signInBtn.textContent = 'Back to Sign In';
+    isSignUpMode = true;
+    return;
+  }
+  
   const email = authEmail.value.trim();
   const password = authPassword.value.trim();
+  const username = authUsername.value.trim();
   
-  if (!email || !password) {
-    showAuthMessage('Please enter email and password', true);
+  if (!email || !password || !username) {
+    showAuthMessage('Please fill all fields', true);
     return;
   }
   
@@ -1104,7 +1837,15 @@ signUpBtn.onclick = async function() {
   }
   
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Save username to Firestore
+    await setDoc(doc(db, 'users', userCredential.user.uid, 'profile', 'data'), {
+      username: username,
+      email: email,
+      createdAt: Date.now()
+    });
+    
     showAuthMessage('Account created successfully!');
   } catch (error) {
     console.error('Sign up error:', error);
@@ -1112,8 +1853,17 @@ signUpBtn.onclick = async function() {
   }
 };
 
-// Sign In
 signInBtn.onclick = async function() {
+  if (isSignUpMode) {
+    // Reset to sign in mode
+    authUsername.style.display = 'none';
+    authUsername.value = '';
+    signUpBtn.textContent = 'Sign Up';
+    signInBtn.textContent = 'Sign In';
+    isSignUpMode = false;
+    return;
+  }
+  
   const email = authEmail.value.trim();
   const password = authPassword.value.trim();
   
@@ -1131,7 +1881,6 @@ signInBtn.onclick = async function() {
   }
 };
 
-// Log Out
 logOutBtn.onclick = async function() {
   try {
     await signOut(auth);
@@ -1140,32 +1889,248 @@ logOutBtn.onclick = async function() {
   }
 };
 
-// Listen to auth state changes
+// Load User Profile
+async function loadUserProfile(user) {
+  try {
+    const profileDoc = await getDoc(doc(db, 'users', user.uid, 'profile', 'data'));
+    if (profileDoc.exists()) {
+      const data = profileDoc.data();
+      usernameDisplay.textContent = data.username || 'User';
+      
+      if (data.profilePicture) {
+        userProfilePic.src = data.profilePicture;
+        userProfilePic.style.display = 'block';
+        settingsProfilePic.src = data.profilePicture;
+        settingsProfilePic.style.display = 'block';
+        settingsProfilePlaceholder.style.display = 'none';
+      } else {
+        userProfilePic.style.display = 'none';
+        settingsProfilePic.style.display = 'none';
+        settingsProfilePlaceholder.style.display = 'flex';
+        settingsProfilePlaceholder.textContent = (data.username || 'U').charAt(0).toUpperCase();
+      }
+      
+      // Load settings
+      if (data.settings) {
+        userSettings = { ...userSettings, ...data.settings };
+        updateSettingsUI();
+      }
+    }
+  } catch (error) {
+    console.error('Error loading profile:', error);
+  }
+}
+
+// Save User Profile
+async function saveUserProfile(updates) {
+  if (!auth.currentUser) return;
+  
+  try {
+    await updateDoc(doc(db, 'users', auth.currentUser.uid, 'profile', 'data'), updates);
+    console.log('Profile updated');
+  } catch (error) {
+    console.error('Error saving profile:', error);
+  }
+}
+
+// Update Settings UI
+function updateSettingsUI() {
+  markdownEverywhereToggle.classList.toggle('active', userSettings.markdownEverywhere);
+  autoSaveToggle.classList.toggle('active', userSettings.autoSave);
+  compactModeToggle.classList.toggle('active', userSettings.compactMode);
+  lineNumbersToggle.classList.toggle('active', userSettings.lineNumbers);
+}
+
+// Toggle Switches
+function setupToggle(toggle, settingKey) {
+  toggle.onclick = function() {
+    userSettings[settingKey] = !userSettings[settingKey];
+    toggle.classList.toggle('active', userSettings[settingKey]);
+    saveUserProfile({ settings: userSettings });
+  };
+}
+
+setupToggle(markdownEverywhereToggle, 'markdownEverywhere');
+setupToggle(autoSaveToggle, 'autoSave');
+setupToggle(compactModeToggle, 'compactMode');
+setupToggle(lineNumbersToggle, 'lineNumbers');
+
+// Profile Picture Upload
+profilePicInput.onchange = async function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  if (file.size > 2 * 1024 * 1024) {
+    showConfirmDialog('Image must be less than 2MB', function() {});
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = async function(event) {
+    const imageData = event.target.result;
+    
+    userProfilePic.src = imageData;
+    userProfilePic.style.display = 'block';
+    settingsProfilePic.src = imageData;
+    settingsProfilePic.style.display = 'block';
+    settingsProfilePlaceholder.style.display = 'none';
+    
+    await saveUserProfile({ profilePicture: imageData });
+  };
+  reader.readAsDataURL(file);
+};
+
+removeProfilePicBtn.onclick = async function() {
+  userProfilePic.style.display = 'none';
+  settingsProfilePic.style.display = 'none';
+  settingsProfilePlaceholder.style.display = 'flex';
+  
+  await saveUserProfile({ profilePicture: null });
+};
+
+// Edit Username
+editUsernameBtn.onclick = function() {
+  document.getElementById('newUsername').value = usernameDisplay.textContent;
+  document.getElementById('usernameModal').style.display = 'flex';
+};
+
+document.getElementById('cancelUsernameBtn').onclick = function() {
+  document.getElementById('usernameModal').style.display = 'none';
+};
+
+document.getElementById('saveUsernameBtn').onclick = async function() {
+  const newUsername = document.getElementById('newUsername').value.trim();
+  
+  if (!newUsername) {
+    document.getElementById('newUsername').classList.add('error');
+    setTimeout(() => {
+      document.getElementById('newUsername').classList.remove('error');
+    }, 1500);
+    return;
+  }
+  
+  usernameDisplay.textContent = newUsername;
+  settingsProfilePlaceholder.textContent = newUsername.charAt(0).toUpperCase();
+  await saveUserProfile({ username: newUsername });
+  
+  document.getElementById('usernameModal').style.display = 'none';
+};
+
+// Edit Password
+editPasswordBtn.onclick = function() {
+  document.getElementById('currentPassword').value = '';
+  document.getElementById('newPassword').value = '';
+  document.getElementById('confirmPassword').value = '';
+  document.getElementById('passwordModal').style.display = 'flex';
+};
+
+document.getElementById('cancelPasswordBtn').onclick = function() {
+  document.getElementById('passwordModal').style.display = 'none';
+};
+
+document.getElementById('savePasswordBtn').onclick = async function() {
+  const currentPass = document.getElementById('currentPassword').value;
+  const newPass = document.getElementById('newPassword').value;
+  const confirmPass = document.getElementById('confirmPassword').value;
+  
+  if (!currentPass || !newPass || !confirmPass) {
+    showConfirmDialog('Please fill all password fields', function() {});
+    return;
+  }
+  
+  if (newPass.length < 6) {
+    showConfirmDialog('New password must be at least 6 characters', function() {});
+    return;
+  }
+  
+  if (newPass !== confirmPass) {
+    showConfirmDialog('Passwords do not match', function() {});
+    return;
+  }
+  
+  try {
+    const user = auth.currentUser;
+    const credential = EmailAuthProvider.credential(user.email, currentPass);
+    await reauthenticateWithCredential(user, credential);
+    await updatePassword(user, newPass);
+    
+    document.getElementById('passwordModal').style.display = 'none';
+    showConfirmDialog('Password updated successfully!', function() {});
+  } catch (error) {
+    console.error('Password update error:', error);
+    showConfirmDialog('Error: ' + error.message, function() {});
+  }
+};
+
+// Settings Button
+settingsBtn.onclick = function() {
+  notesPanel.style.display = 'none';
+  versionPage.style.display = 'none';
+  settingsPage.style.display = 'block';
+  pageTitle.textContent = '⚙️ Settings';
+  backButton.style.display = 'inline-block';
+  
+  if (isMobile()) {
+    sidebar.classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('active');
+  }
+};
+
+// Export All Data
+exportAllBtn.onclick = function() {
+  const exportData = {
+    notes: notes,
+    settings: userSettings,
+    username: usernameDisplay.textContent,
+    exportDate: new Date().toISOString()
+  };
+  
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'notra-backup-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+// Clear Cache
+clearCacheBtn.onclick = function() {
+  showConfirmDialog('Clear all cached data? This will not delete your cloud notes.', function() {
+    localStorage.clear();
+    showConfirmDialog('Cache cleared successfully!', function() {});
+  });
+};
+
+// Auth State Listener
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // User logged in
     authSection.style.display = 'none';
     mainApp.style.display = 'flex';
     statusBar.style.display = 'flex';
-    userEmail.textContent = user.email;
+    updateMobileUI();
     
-    // Load notes
+    await loadUserProfile(user);
     await loadNotes();
   } else {
-    // User logged out
     authSection.style.display = 'block';
     mainApp.style.display = 'none';
     statusBar.style.display = 'none';
+    mobileMenuBtn.style.display = 'none';
     notes = [];
     renderNotes();
     
-    // Clear auth inputs
     authEmail.value = '';
     authPassword.value = '';
+    authUsername.value = '';
+    authUsername.style.display = 'none';
+    signUpBtn.textContent = 'Sign Up';
+    signInBtn.textContent = 'Sign In';
+    isSignUpMode = false;
   }
 });
 
-// Save note (local + cloud)
+// Save Note
 async function saveNote() {
   const titleInput = document.getElementById('noteTitle');
   const title = titleInput.value.trim();
@@ -1188,7 +2153,6 @@ async function saveNote() {
     updatedAt: Date.now()
   };
   
-  // Update local array
   if (currentEditIndex === -1) {
     noteData.id = Date.now().toString();
     notes.push(noteData);
@@ -1197,10 +2161,8 @@ async function saveNote() {
     notes[currentEditIndex] = noteData;
   }
   
-  // Save to localStorage
   localStorage.setItem(`note_${noteData.id}`, JSON.stringify(noteData));
   
-  // Save to Firebase
   if (auth.currentUser) {
     try {
       statusSync.textContent = '⏳ Syncing...';
@@ -1209,7 +2171,6 @@ async function saveNote() {
         noteData
       );
       statusSync.textContent = '☁️ Synced';
-      console.log('Note synced to cloud');
     } catch (error) {
       console.error('Cloud sync failed:', error);
       statusSync.textContent = '⚠️ Sync Failed';
@@ -1220,9 +2181,8 @@ async function saveNote() {
   renderNotes();
 }
 
-// Load all notes
+// Load Notes
 async function loadNotes() {
-  // 1. Load from localStorage first
   const localNotes = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -1239,7 +2199,6 @@ async function loadNotes() {
   notes = localNotes;
   renderNotes();
   
-  // 2. Sync with cloud if logged in
   if (auth.currentUser) {
     try {
       statusSync.textContent = '⏳ Syncing...';
@@ -1252,10 +2211,8 @@ async function loadNotes() {
         cloudNotes.push(doc.data());
       });
       
-      // Merge: use cloud version if it's newer
       const merged = mergeNotes(localNotes, cloudNotes);
       
-      // Update localStorage with cloud data
       merged.forEach(note => {
         localStorage.setItem(`note_${note.id}`, JSON.stringify(note));
       });
@@ -1263,7 +2220,6 @@ async function loadNotes() {
       notes = merged;
       renderNotes();
       statusSync.textContent = '☁️ Synced';
-      console.log('Notes synced from cloud');
     } catch (error) {
       console.error('Cloud load failed:', error);
       statusSync.textContent = '⚠️ Sync Failed';
@@ -1271,16 +2227,13 @@ async function loadNotes() {
   }
 }
 
-// Merge local and cloud notes
 function mergeNotes(localNotes, cloudNotes) {
   const notesMap = new Map();
   
-  // Add local notes
   localNotes.forEach(note => {
     notesMap.set(note.id, note);
   });
   
-  // Override with cloud notes if they're newer
   cloudNotes.forEach(note => {
     const existing = notesMap.get(note.id);
     if (!existing || note.updatedAt > existing.updatedAt) {
@@ -1291,24 +2244,18 @@ function mergeNotes(localNotes, cloudNotes) {
   return Array.from(notesMap.values());
 }
 
-// Delete note
 async function handleDelete(index) {
   showConfirmDialog('Are you sure you want to delete this note?', async function() {
     const noteId = notes[index].id;
     
-    // Remove from array
     notes.splice(index, 1);
-    
-    // Delete from localStorage
     localStorage.removeItem(`note_${noteId}`);
     
-    // Delete from Firebase
     if (auth.currentUser) {
       try {
         statusSync.textContent = '⏳ Syncing...';
         await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'notes', noteId));
         statusSync.textContent = '☁️ Synced';
-        console.log('Note deleted from cloud');
       } catch (error) {
         console.error('Cloud delete failed:', error);
         statusSync.textContent = '⚠️ Sync Failed';
@@ -1341,14 +2288,23 @@ document.getElementById('confirmCancelBtn').onclick = closeConfirmDialog;
 document.getElementById('confirmYesBtn').onclick = confirmDialogYes;
 
 document.getElementById('softwareVersionBtn').onclick = function() {
-  appContent.querySelector('.panel').style.display = 'none';
+  notesPanel.style.display = 'none';
+  settingsPage.style.display = 'none';
   versionPage.style.display = 'block';
+  pageTitle.textContent = 'ℹ️ Version';
   backButton.style.display = 'inline-block';
+  
+  if (isMobile()) {
+    sidebar.classList.remove('mobile-open');
+    sidebarOverlay.classList.remove('active');
+  }
 };
 
 backButton.onclick = function() {
-  appContent.querySelector('.panel').style.display = '';
+  notesPanel.style.display = '';
+  settingsPage.style.display = 'none';
   versionPage.style.display = 'none';
+  pageTitle.textContent = '📝 My Notes';
   backButton.style.display = 'none';
 };
 
@@ -1494,8 +2450,13 @@ document.getElementById('addNote').onclick = function() {
   document.getElementById('noteModalTitle').textContent = 'Add Note';
   document.getElementById('noteTitle').value = '';
   noteContentTextarea.value = '';
-  markdownCheckbox.checked = false;
-  editorTabs.style.display = 'none';
+  markdownCheckbox.checked = userSettings.markdownEverywhere;
+  
+  if (userSettings.markdownEverywhere) {
+    editorTabs.style.display = 'flex';
+  } else {
+    editorTabs.style.display = 'none';
+  }
   
   document.querySelectorAll('.tab').forEach(function(t) {
     t.classList.remove('active');
@@ -1590,10 +2551,13 @@ document.getElementById('downloadNote').onclick = function() {
   URL.revokeObjectURL(url);
 };
 
+updateMobileUI();
+
 console.log('✨ Notra app initialized with Firebase!');
 console.log('💾 Storage: localStorage + Firebase Cloud Sync');
+console.log('📱 Mobile-friendly UI enabled');
+console.log('👤 User profiles and settings enabled');
 </script>
 
 </body>
 </html>
-
