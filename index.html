@@ -88,6 +88,12 @@ html,body{
   overflow-x:hidden;
 }
 
+.sidebar-footer{
+  padding:20px;
+  border-top:1px solid var(--border);
+  white-space:nowrap;
+}
+
 .sidebar-title{
   font-size:11px;
   font-weight:700;
@@ -494,6 +500,35 @@ html,body{
   }
 }
 
+@keyframes shake{
+  0%, 100%{
+    transform:translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90%{
+    transform:translateX(-10px);
+  }
+  20%, 40%, 60%, 80%{
+    transform:translateX(10px);
+  }
+}
+
+.input-error{
+  animation:shake 0.6s ease-in-out, errorFlash 0.5s ease-in-out 3;
+  border-color:#ff4444 !important;
+}
+
+.error-message{
+  color:#ff4444;
+  font-size:13px;
+  margin:-10px 0 14px 0;
+  display:none;
+  font-weight:600;
+}
+
+.error-message.show{
+  display:block;
+}
+
 .modal-content textarea{
   width:100%;
   padding:12px 16px;
@@ -820,30 +855,6 @@ html,body{
   flex-wrap:wrap;
 }
 
-.user-info button{
-  padding:8px 16px;
-  border-radius:999px;
-  border:none;
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all .3s ease;
-}
-
-.user-info button:first-of-type{
-  background:rgba(77,195,255,.2);
-  color:var(--accent);
-}
-
-.user-info button:last-of-type{
-  background:rgba(255,68,68,.2);
-  color:#ff6666;
-}
-
-.user-info button:hover{
-  transform:scale(1.05);
-}
-
 /* Profile Picture */
 .profile-pic{
   width:36px;
@@ -1098,6 +1109,95 @@ html,body{
   color:#ff6666;
 }
 
+/* Logout Animation */
+.logout-overlay{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+  background:
+    radial-gradient(1200px 600px at 50% 50%, #15245a 0%, transparent 60%),
+    radial-gradient(900px 500px at 50% 50%, #0f2a4f 0%, transparent 55%),
+    var(--bg);
+}
+
+.logout-animation{
+  font-size:80px;
+  font-weight:700;
+  letter-spacing:8px;
+  display:flex;
+  gap:4px;
+}
+
+.logout-letter{
+  opacity:0;
+  transform:translateY(50px);
+  animation:letterAppear 0.5s ease forwards;
+  background:linear-gradient(135deg,var(--accent),var(--highlight));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.logout-letter:nth-child(1){animation-delay:0s;}
+.logout-letter:nth-child(2){animation-delay:0.1s;}
+.logout-letter:nth-child(3){animation-delay:0.2s;}
+.logout-letter:nth-child(4){animation-delay:0.3s;}
+.logout-letter:nth-child(5){animation-delay:0.4s;}
+
+@keyframes letterAppear{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.logout-letter.fade-out{
+  animation:letterDisappear 0.3s ease forwards;
+}
+
+@keyframes letterDisappear{
+  to{
+    opacity:0;
+    transform:scale(0.5);
+  }
+}
+
+.logout-o{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  border:8px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+              linear-gradient(135deg,var(--accent),var(--highlight)) border-box;
+  display:none;
+  animation:oPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes oPulse{
+  0%, 100%{
+    box-shadow:0 0 30px rgba(77,195,255,.6);
+    transform:scale(1);
+  }
+  50%{
+    box-shadow:0 0 60px rgba(127,95,255,.8);
+    transform:scale(1.1);
+  }
+}
+
+.logout-o.spin{
+  animation:oSpin 1s linear infinite, oPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes oSpin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
 /* ===================== MOBILE RESPONSIVE STYLES ===================== */
 
 @media (max-width: 768px) {
@@ -1309,6 +1409,15 @@ html,body{
   .profile-pic-actions button {
     width: 100%;
   }
+  
+  .logout-animation{
+    font-size:50px;
+  }
+  
+  .logout-o{
+    width:80px;
+    height:80px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1368,6 +1477,18 @@ html,body{
 <button class="mobile-menu-btn" id="mobileMenuBtn" style="display:none;">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+<!-- Logout Animation Overlay -->
+<div class="logout-overlay" id="logoutOverlay">
+  <div class="logout-animation" id="logoutAnimation">
+    <span class="logout-letter">N</span>
+    <span class="logout-letter">o</span>
+    <span class="logout-letter">t</span>
+    <span class="logout-letter">r</span>
+    <span class="logout-letter">a</span>
+  </div>
+  <div class="logout-o" id="logoutO"></div>
+</div>
+
 <div class="app-container">
   <!-- Auth Section -->
   <div id="authSection">
@@ -1376,8 +1497,12 @@ html,body{
         <h2 style="text-align:center; margin-bottom:24px;">Welcome to Notra</h2>
         <div id="authMessage" class="auth-message" style="display:none;"></div>
         
+        <div class="error-message" id="emailError">Email incorrect</div>
         <input type="email" id="authEmail" placeholder="Email" style="display:block;">
+        
+        <div class="error-message" id="passwordError">Password incorrect</div>
         <input type="password" id="authPassword" placeholder="Password" style="display:block;">
+        
         <input type="text" id="authUsername" placeholder="Username" style="display:none;">
         
         <div style="display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;">
@@ -1427,6 +1552,26 @@ html,body{
           </div>
         </div>
       </div>
+      
+      <div class="sidebar-footer">
+        <div class="sidebar-actions">
+          <div class="sidebar-action" id="settingsBtn">
+            <div class="sidebar-action-icon">⚙️</div>
+            <div class="sidebar-action-content">
+              <div class="sidebar-action-title">Settings</div>
+              <div class="sidebar-action-desc">Manage your account</div>
+            </div>
+          </div>
+          
+          <div class="sidebar-action" id="logOutBtn">
+            <div class="sidebar-action-icon">🚪</div>
+            <div class="sidebar-action-content">
+              <div class="sidebar-action-title">Log Out</div>
+              <div class="sidebar-action-desc">Sign out of account</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </aside>
 
     <div class="content-area">
@@ -1436,8 +1581,6 @@ html,body{
           <div class="user-info">
             <img id="userProfilePic" class="profile-pic" style="display:none;">
             <span id="usernameDisplay" class="username-display"></span>
-            <button id="settingsBtn">⚙️ Settings</button>
-            <button id="logOutBtn">Log Out</button>
           </div>
         </div>
       </div>
@@ -1745,6 +1888,8 @@ const authUsername = document.getElementById('authUsername');
 const signInBtn = document.getElementById('signInBtn');
 const signUpBtn = document.getElementById('signUpBtn');
 const authMessage = document.getElementById('authMessage');
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
 const usernameDisplay = document.getElementById('usernameDisplay');
 const userProfilePic = document.getElementById('userProfilePic');
 const settingsBtn = document.getElementById('settingsBtn');
@@ -1764,6 +1909,11 @@ const compactModeToggle = document.getElementById('compactModeToggle');
 const lineNumbersToggle = document.getElementById('lineNumbersToggle');
 const exportAllBtn = document.getElementById('exportAllBtn');
 const clearCacheBtn = document.getElementById('clearCacheBtn');
+
+// Logout Animation
+const logoutOverlay = document.getElementById('logoutOverlay');
+const logoutAnimation = document.getElementById('logoutAnimation');
+const logoutO = document.getElementById('logoutO');
 
 // Mobile
 function isMobile() {
@@ -1801,7 +1951,17 @@ document.querySelectorAll('.sidebar-action').forEach(function(action) {
 
 window.addEventListener('resize', updateMobileUI);
 
-// Auth Messages
+// Auth Error Handling
+function showInputError(input, errorElement) {
+  input.classList.add('input-error');
+  errorElement.classList.add('show');
+  
+  setTimeout(() => {
+    input.classList.remove('input-error');
+    errorElement.classList.remove('show');
+  }, 3000);
+}
+
 function showAuthMessage(message, isError = false) {
   authMessage.textContent = message;
   authMessage.className = 'auth-message ' + (isError ? 'error' : 'success');
@@ -1814,7 +1974,6 @@ function showAuthMessage(message, isError = false) {
 // Sign Up Flow
 signUpBtn.onclick = async function() {
   if (!isSignUpMode) {
-    // Show username field
     authUsername.style.display = 'block';
     signUpBtn.textContent = 'Create Account';
     signInBtn.textContent = 'Back to Sign In';
@@ -1839,23 +1998,30 @@ signUpBtn.onclick = async function() {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     
-    // Save username to Firestore
     await setDoc(doc(db, 'users', userCredential.user.uid, 'profile', 'data'), {
       username: username,
       email: email,
+      profilePicture: null,
+      settings: userSettings,
       createdAt: Date.now()
     });
     
     showAuthMessage('Account created successfully!');
   } catch (error) {
     console.error('Sign up error:', error);
-    showAuthMessage(error.message, true);
+    if (error.code === 'auth/email-already-in-use') {
+      showAuthMessage('This email is already registered', true);
+    } else if (error.code === 'auth/invalid-email') {
+      showInputError(authEmail, emailError);
+    } else {
+      showAuthMessage('Sign up failed. Please try again.', true);
+    }
   }
 };
 
+// Sign In
 signInBtn.onclick = async function() {
   if (isSignUpMode) {
-    // Reset to sign in mode
     authUsername.style.display = 'none';
     authUsername.value = '';
     signUpBtn.textContent = 'Sign Up';
@@ -1877,17 +2043,68 @@ signInBtn.onclick = async function() {
     showAuthMessage('Signed in successfully!');
   } catch (error) {
     console.error('Sign in error:', error);
-    showAuthMessage(error.message, true);
+    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+      showInputError(authPassword, passwordError);
+    } else if (error.code === 'auth/user-not-found') {
+      showInputError(authEmail, emailError);
+    } else if (error.code === 'auth/invalid-email') {
+      showInputError(authEmail, emailError);
+    } else {
+      showAuthMessage('Sign in failed. Please check your credentials.', true);
+    }
   }
 };
 
-logOutBtn.onclick = async function() {
+// Logout with Animation
+logOutBtn.onclick = function() {
+  showConfirmDialog('Are you sure you want to log out?', async function() {
+    await performLogout();
+  });
+};
+
+async function performLogout() {
+  logoutOverlay.style.display = 'flex';
+  
+  // Step 1: Show letters appearing
+  const letters = document.querySelectorAll('.logout-letter');
+  letters.forEach(letter => {
+    letter.classList.remove('fade-out');
+    letter.style.opacity = '0';
+  });
+  
+  logoutAnimation.style.display = 'flex';
+  logoutO.style.display = 'none';
+  
+  await new Promise(resolve => setTimeout(resolve, 2500));
+  
+  // Step 2: Fade out letters
+  letters.forEach(letter => {
+    letter.classList.add('fade-out');
+  });
+  
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // Step 3: Show pulsing O
+  logoutAnimation.style.display = 'none';
+  logoutO.style.display = 'block';
+  logoutO.classList.remove('spin');
+  
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
+  // Step 4: Spin the O
+  logoutO.classList.add('spin');
+  
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // Actually sign out
   try {
     await signOut(auth);
   } catch (error) {
     console.error('Sign out error:', error);
   }
-};
+  
+  logoutOverlay.style.display = 'none';
+}
 
 // Load User Profile
 async function loadUserProfile(user) {
@@ -1910,7 +2127,6 @@ async function loadUserProfile(user) {
         settingsProfilePlaceholder.textContent = (data.username || 'U').charAt(0).toUpperCase();
       }
       
-      // Load settings
       if (data.settings) {
         userSettings = { ...userSettings, ...data.settings };
         updateSettingsUI();
@@ -1926,8 +2142,9 @@ async function saveUserProfile(updates) {
   if (!auth.currentUser) return;
   
   try {
-    await updateDoc(doc(db, 'users', auth.currentUser.uid, 'profile', 'data'), updates);
-    console.log('Profile updated');
+    const profileRef = doc(db, 'users', auth.currentUser.uid, 'profile', 'data');
+    await updateDoc(profileRef, updates);
+    console.log('Profile updated in Firestore');
   } catch (error) {
     console.error('Error saving profile:', error);
   }
@@ -2557,6 +2774,7 @@ console.log('✨ Notra app initialized with Firebase!');
 console.log('💾 Storage: localStorage + Firebase Cloud Sync');
 console.log('📱 Mobile-friendly UI enabled');
 console.log('👤 User profiles and settings enabled');
+console.log('🎬 Logout animation enabled');
 </script>
 
 </body>
