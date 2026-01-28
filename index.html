@@ -94,6 +94,31 @@ html,body{
   white-space:nowrap;
 }
 
+.sidebar-footer .sidebar-actions{
+  gap:8px;
+}
+
+.sidebar-footer .sidebar-action{
+  background:rgba(77,195,255,.12);
+  border:1px solid rgba(77,195,255,.25);
+  padding:10px 12px;
+  min-height:auto;
+}
+
+.sidebar-footer .sidebar-action:hover{
+  background:rgba(77,195,255,.2);
+  border-color:rgba(77,195,255,.4);
+}
+
+.sidebar-footer .sidebar-action-title{
+  font-size:13px;
+  font-weight:600;
+}
+
+.sidebar-footer .sidebar-action-desc{
+  font-size:11px;
+}
+
 .sidebar-title{
   font-size:11px;
   font-weight:700;
@@ -2109,11 +2134,17 @@ async function performLogout() {
 // Load User Profile
 async function loadUserProfile(user) {
   try {
-    const profileDoc = await getDoc(doc(db, 'users', user.uid, 'profile', 'data'));
+    const profileRef = doc(db, 'users', user.uid, 'profile', 'data');
+    const profileDoc = await getDoc(profileRef);
+    
     if (profileDoc.exists()) {
       const data = profileDoc.data();
-      usernameDisplay.textContent = data.username || 'User';
       
+      // Set username
+      const username = data.username || 'User';
+      usernameDisplay.textContent = username;
+      
+      // Set profile picture
       if (data.profilePicture) {
         userProfilePic.src = data.profilePicture;
         userProfilePic.style.display = 'block';
@@ -2124,13 +2155,30 @@ async function loadUserProfile(user) {
         userProfilePic.style.display = 'none';
         settingsProfilePic.style.display = 'none';
         settingsProfilePlaceholder.style.display = 'flex';
-        settingsProfilePlaceholder.textContent = (data.username || 'U').charAt(0).toUpperCase();
+        settingsProfilePlaceholder.textContent = username.charAt(0).toUpperCase();
       }
       
+      // Load settings
       if (data.settings) {
         userSettings = { ...userSettings, ...data.settings };
         updateSettingsUI();
       }
+      
+      console.log('Profile loaded:', { username, hasPicture: !!data.profilePicture });
+    } else {
+      // If profile doesn't exist, create it with defaults
+      console.log('No profile found, creating default profile');
+      const defaultProfile = {
+        username: user.email.split('@')[0],
+        email: user.email,
+        profilePicture: null,
+        settings: userSettings,
+        createdAt: Date.now()
+      };
+      
+      await setDoc(profileRef, defaultProfile);
+      usernameDisplay.textContent = defaultProfile.username;
+      settingsProfilePlaceholder.textContent = defaultProfile.username.charAt(0).toUpperCase();
     }
   } catch (error) {
     console.error('Error loading profile:', error);
@@ -2143,10 +2191,36 @@ async function saveUserProfile(updates) {
   
   try {
     const profileRef = doc(db, 'users', auth.currentUser.uid, 'profile', 'data');
-    await updateDoc(profileRef, updates);
-    console.log('Profile updated in Firestore');
+    
+    // Use setDoc with merge to ensure data persists
+    await setDoc(profileRef, updates, { merge: true });
+    
+    console.log('Profile updated in Firestore:', updates);
+    
+    // Update local UI immediately
+    if (updates.username) {
+      usernameDisplay.textContent = updates.username;
+      settingsProfilePlaceholder.textContent = updates.username.charAt(0).toUpperCase();
+    }
+    
+    if (updates.profilePicture !== undefined) {
+      if (updates.profilePicture) {
+        userProfilePic.src = updates.profilePicture;
+        userProfilePic.style.display = 'block';
+        settingsProfilePic.src = updates.profilePicture;
+        settingsProfilePic.style.display = 'block';
+        settingsProfilePlaceholder.style.display = 'none';
+      } else {
+        userProfilePic.style.display = 'none';
+        settingsProfilePic.style.display = 'none';
+        settingsProfilePlaceholder.style.display = 'flex';
+      }
+    }
+    
+    return true;
   } catch (error) {
     console.error('Error saving profile:', error);
+    return false;
   }
 }
 
@@ -2186,23 +2260,39 @@ profilePicInput.onchange = async function(e) {
   reader.onload = async function(event) {
     const imageData = event.target.result;
     
+    // Update UI immediately
     userProfilePic.src = imageData;
     userProfilePic.style.display = 'block';
     settingsProfilePic.src = imageData;
     settingsProfilePic.style.display = 'block';
     settingsProfilePlaceholder.style.display = 'none';
     
-    await saveUserProfile({ profilePicture: imageData });
+    // Save to Firestore
+    const saved = await saveUserProfile({ profilePicture: imageData });
+    
+    if (saved) {
+      console.log('Profile picture saved successfully');
+    } else {
+      console.error('Failed to save profile picture');
+    }
   };
   reader.readAsDataURL(file);
 };
 
 removeProfilePicBtn.onclick = async function() {
+  // Update UI immediately
   userProfilePic.style.display = 'none';
   settingsProfilePic.style.display = 'none';
   settingsProfilePlaceholder.style.display = 'flex';
   
-  await saveUserProfile({ profilePicture: null });
+  // Save to Firestore
+  const saved = await saveUserProfile({ profilePicture: null });
+  
+  if (saved) {
+    console.log('Profile picture removed successfully');
+  } else {
+    console.error('Failed to remove profile picture');
+  }
 };
 
 // Edit Username
@@ -2226,11 +2316,15 @@ document.getElementById('saveUsernameBtn').onclick = async function() {
     return;
   }
   
-  usernameDisplay.textContent = newUsername;
-  settingsProfilePlaceholder.textContent = newUsername.charAt(0).toUpperCase();
-  await saveUserProfile({ username: newUsername });
+  // Save to Firestore
+  const saved = await saveUserProfile({ username: newUsername });
   
-  document.getElementById('usernameModal').style.display = 'none';
+  if (saved) {
+    console.log('Username updated successfully to:', newUsername);
+    document.getElementById('usernameModal').style.display = 'none';
+  } else {
+    console.error('Failed to update username');
+  }
 };
 
 // Edit Password
