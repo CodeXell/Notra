@@ -1134,6 +1134,80 @@ html,body{
   color:#ff6666;
 }
 
+/* Loading Spinner */
+.loading-overlay{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+  background:
+    radial-gradient(1200px 600px at 50% 50%, #15245a 0%, transparent 60%),
+    radial-gradient(900px 500px at 50% 50%, #0f2a4f 0%, transparent 55%),
+    var(--bg);
+  animation:fadeIn 0.3s ease;
+}
+
+.loading-spinner{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  border:6px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+              linear-gradient(135deg,var(--accent),var(--highlight)) border-box;
+  animation:spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite, 
+            pulse 1.5s ease-in-out infinite;
+  position:relative;
+}
+
+.loading-spinner::before{
+  content:'';
+  position:absolute;
+  inset:-15px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(77,195,255,0.3), transparent 70%);
+  animation:glowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin{
+  0%{
+    transform:rotate(0deg);
+  }
+  100%{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes pulse{
+  0%, 100%{
+    box-shadow:0 0 30px rgba(77,195,255,.6), 0 0 60px rgba(127,95,255,.4);
+  }
+  50%{
+    box-shadow:0 0 60px rgba(77,195,255,1), 0 0 100px rgba(127,95,255,.8);
+  }
+}
+
+.loading-text{
+  position:absolute;
+  margin-top:120px;
+  font-size:16px;
+  font-weight:600;
+  color:var(--accent);
+  letter-spacing:2px;
+  animation:textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes textPulse{
+  0%, 100%{
+    opacity:0.6;
+  }
+  50%{
+    opacity:1;
+  }
+}
+
 /* Logout Animation */
 .logout-overlay{
   position:fixed;
@@ -1147,24 +1221,35 @@ html,body{
     radial-gradient(1200px 600px at 50% 50%, #15245a 0%, transparent 60%),
     radial-gradient(900px 500px at 50% 50%, #0f2a4f 0%, transparent 55%),
     var(--bg);
+  animation:fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
 }
 
 .logout-animation{
   font-size:80px;
   font-weight:700;
-  letter-spacing:8px;
+  letter-spacing:12px;
   display:flex;
-  gap:4px;
+  gap:6px;
 }
 
 .logout-letter{
   opacity:0;
-  transform:translateY(50px);
-  animation:letterAppear 0.5s ease forwards;
+  transform:translateY(100px) scale(0.5);
+  animation:letterAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   background:linear-gradient(135deg,var(--accent),var(--highlight));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(77,195,255,0.5));
 }
 
 .logout-letter:nth-child(1){animation-delay:0s;}
@@ -1174,52 +1259,91 @@ html,body{
 .logout-letter:nth-child(5){animation-delay:0.4s;}
 
 @keyframes letterAppear{
-  to{
+  0%{
+    opacity:0;
+    transform:translateY(100px) scale(0.5) rotate(-10deg);
+  }
+  60%{
+    transform:translateY(-20px) scale(1.1) rotate(5deg);
+  }
+  100%{
     opacity:1;
-    transform:translateY(0);
+    transform:translateY(0) scale(1) rotate(0deg);
   }
 }
 
 .logout-letter.fade-out{
-  animation:letterDisappear 0.3s ease forwards;
+  animation:letterDisappear 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
 }
 
 @keyframes letterDisappear{
-  to{
+  0%{
+    opacity:1;
+    transform:scale(1) rotate(0deg);
+  }
+  100%{
     opacity:0;
-    transform:scale(0.5);
+    transform:scale(0.3) rotate(45deg) translateY(-50px);
   }
 }
 
 .logout-o{
-  width:120px;
-  height:120px;
+  width:140px;
+  height:140px;
   border-radius:50%;
-  border:8px solid transparent;
+  border:10px solid transparent;
   background:linear-gradient(var(--bg),var(--bg)) padding-box,
               linear-gradient(135deg,var(--accent),var(--highlight)) border-box;
   display:none;
-  animation:oPulse 1.5s ease-in-out infinite;
+  position:relative;
+  animation:oPulse 1.2s ease-in-out infinite;
+}
+
+.logout-o::before{
+  content:'';
+  position:absolute;
+  inset:-20px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(77,195,255,0.3), transparent 70%);
+  animation:glowPulse 1.2s ease-in-out infinite;
 }
 
 @keyframes oPulse{
   0%, 100%{
-    box-shadow:0 0 30px rgba(77,195,255,.6);
+    box-shadow:0 0 40px rgba(77,195,255,.8), 0 0 80px rgba(127,95,255,.5);
     transform:scale(1);
   }
   50%{
-    box-shadow:0 0 60px rgba(127,95,255,.8);
-    transform:scale(1.1);
+    box-shadow:0 0 80px rgba(77,195,255,1), 0 0 120px rgba(127,95,255,.8);
+    transform:scale(1.15);
+  }
+}
+
+@keyframes glowPulse{
+  0%, 100%{
+    opacity:0.5;
+    transform:scale(1);
+  }
+  50%{
+    opacity:1;
+    transform:scale(1.3);
   }
 }
 
 .logout-o.spin{
-  animation:oSpin 1s linear infinite, oPulse 1.5s ease-in-out infinite;
+  animation:oSpin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite, 
+            oPulse 1.2s ease-in-out infinite;
 }
 
 @keyframes oSpin{
-  to{
-    transform:rotate(360deg);
+  0%{
+    transform:rotate(0deg) scale(1);
+  }
+  50%{
+    transform:rotate(180deg) scale(1.15);
+  }
+  100%{
+    transform:rotate(360deg) scale(1);
   }
 }
 
@@ -1501,6 +1625,14 @@ html,body{
 
 <button class="mobile-menu-btn" id="mobileMenuBtn" style="display:none;">☰</button>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div style="text-align:center;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">LOADING...</div>
+  </div>
+</div>
 
 <!-- Logout Animation Overlay -->
 <div class="logout-overlay" id="logoutOverlay">
@@ -1939,6 +2071,7 @@ const clearCacheBtn = document.getElementById('clearCacheBtn');
 const logoutOverlay = document.getElementById('logoutOverlay');
 const logoutAnimation = document.getElementById('logoutAnimation');
 const logoutO = document.getElementById('logoutO');
+const loadingOverlay = document.getElementById('loadingOverlay');
 
 // Mobile
 function isMobile() {
@@ -2021,19 +2154,31 @@ signUpBtn.onclick = async function() {
   }
   
   try {
+    console.log('🔵 Creating account...');
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('✅ Account created:', userCredential.user.uid);
     
-    await setDoc(doc(db, 'users', userCredential.user.uid, 'profile', 'data'), {
+    // Create profile document in Firestore
+    const profileData = {
       username: username,
       email: email,
       profilePicture: null,
       settings: userSettings,
-      createdAt: Date.now()
-    });
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    
+    console.log('🔵 Creating profile document:', profileData);
+    await setDoc(doc(db, 'users', userCredential.user.uid, 'profile', 'data'), profileData);
+    console.log('✅ Profile document created');
+    
+    // Verify it was saved
+    const verifyDoc = await getDoc(doc(db, 'users', userCredential.user.uid, 'profile', 'data'));
+    console.log('✅ Profile verification:', verifyDoc.exists(), verifyDoc.data());
     
     showAuthMessage('Account created successfully!');
   } catch (error) {
-    console.error('Sign up error:', error);
+    console.error('❌ Sign up error:', error);
     if (error.code === 'auth/email-already-in-use') {
       showAuthMessage('This email is already registered', true);
     } else if (error.code === 'auth/invalid-email') {
@@ -2088,9 +2233,10 @@ logOutBtn.onclick = function() {
 };
 
 async function performLogout() {
+  console.log('🔵 Starting logout animation...');
   logoutOverlay.style.display = 'flex';
   
-  // Step 1: Show letters appearing
+  // Step 1: Show letters appearing (with bounce effect)
   const letters = document.querySelectorAll('.logout-letter');
   letters.forEach(letter => {
     letter.classList.remove('fade-out');
@@ -2100,32 +2246,35 @@ async function performLogout() {
   logoutAnimation.style.display = 'flex';
   logoutO.style.display = 'none';
   
-  await new Promise(resolve => setTimeout(resolve, 2500));
+  // Wait for letters to fully appear
+  await new Promise(resolve => setTimeout(resolve, 1800));
   
-  // Step 2: Fade out letters
+  // Step 2: Fade out letters with rotation
   letters.forEach(letter => {
     letter.classList.add('fade-out');
   });
   
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await new Promise(resolve => setTimeout(resolve, 700));
   
-  // Step 3: Show pulsing O
+  // Step 3: Show pulsing O with glow
   logoutAnimation.style.display = 'none';
   logoutO.style.display = 'block';
   logoutO.classList.remove('spin');
   
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Step 4: Spin the O
+  // Step 4: Spin the O faster
   logoutO.classList.add('spin');
   
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1600));
   
   // Actually sign out
+  console.log('🔵 Signing out...');
   try {
     await signOut(auth);
+    console.log('✅ Signed out successfully');
   } catch (error) {
-    console.error('Sign out error:', error);
+    console.error('❌ Sign out error:', error);
   }
   
   logoutOverlay.style.display = 'none';
@@ -2133,25 +2282,31 @@ async function performLogout() {
 
 // Load User Profile
 async function loadUserProfile(user) {
+  console.log('🔵 Loading profile for user:', user.uid);
+  
   try {
     const profileRef = doc(db, 'users', user.uid, 'profile', 'data');
     const profileDoc = await getDoc(profileRef);
     
     if (profileDoc.exists()) {
       const data = profileDoc.data();
+      console.log('✅ Profile data retrieved from Firestore:', data);
       
       // Set username
-      const username = data.username || 'User';
+      const username = data.username || user.email.split('@')[0];
       usernameDisplay.textContent = username;
+      console.log('✅ Username set to:', username);
       
       // Set profile picture
       if (data.profilePicture) {
+        console.log('✅ Profile picture found, setting...');
         userProfilePic.src = data.profilePicture;
         userProfilePic.style.display = 'block';
         settingsProfilePic.src = data.profilePicture;
         settingsProfilePic.style.display = 'block';
         settingsProfilePlaceholder.style.display = 'none';
       } else {
+        console.log('ℹ️ No profile picture, showing placeholder');
         userProfilePic.style.display = 'none';
         settingsProfilePic.style.display = 'none';
         settingsProfilePlaceholder.style.display = 'flex';
@@ -2162,45 +2317,64 @@ async function loadUserProfile(user) {
       if (data.settings) {
         userSettings = { ...userSettings, ...data.settings };
         updateSettingsUI();
+        console.log('✅ Settings loaded:', userSettings);
       }
-      
-      console.log('Profile loaded:', { username, hasPicture: !!data.profilePicture });
     } else {
-      // If profile doesn't exist, create it with defaults
-      console.log('No profile found, creating default profile');
+      console.log('⚠️ No profile found, creating default profile');
       const defaultProfile = {
         username: user.email.split('@')[0],
         email: user.email,
         profilePicture: null,
         settings: userSettings,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        updatedAt: Date.now()
       };
       
       await setDoc(profileRef, defaultProfile);
+      console.log('✅ Default profile created:', defaultProfile);
+      
       usernameDisplay.textContent = defaultProfile.username;
       settingsProfilePlaceholder.textContent = defaultProfile.username.charAt(0).toUpperCase();
+      settingsProfilePlaceholder.style.display = 'flex';
     }
   } catch (error) {
-    console.error('Error loading profile:', error);
+    console.error('❌ Error loading profile:', error);
   }
 }
 
 // Save User Profile
 async function saveUserProfile(updates) {
-  if (!auth.currentUser) return;
+  if (!auth.currentUser) {
+    console.error('❌ No authenticated user');
+    return false;
+  }
+  
+  console.log('🔵 Saving profile updates:', updates);
   
   try {
     const profileRef = doc(db, 'users', auth.currentUser.uid, 'profile', 'data');
     
-    // Use setDoc with merge to ensure data persists
-    await setDoc(profileRef, updates, { merge: true });
+    // Add timestamp
+    const dataToSave = {
+      ...updates,
+      updatedAt: Date.now()
+    };
     
-    console.log('Profile updated in Firestore:', updates);
+    // Use setDoc with merge to ensure data persists
+    await setDoc(profileRef, dataToSave, { merge: true });
+    console.log('✅ Profile saved to Firestore successfully');
+    
+    // Verify the save by reading it back
+    const verifyDoc = await getDoc(profileRef);
+    if (verifyDoc.exists()) {
+      console.log('✅ Verification: Data in Firestore:', verifyDoc.data());
+    }
     
     // Update local UI immediately
     if (updates.username) {
       usernameDisplay.textContent = updates.username;
       settingsProfilePlaceholder.textContent = updates.username.charAt(0).toUpperCase();
+      console.log('✅ UI updated with username:', updates.username);
     }
     
     if (updates.profilePicture !== undefined) {
@@ -2210,16 +2384,18 @@ async function saveUserProfile(updates) {
         settingsProfilePic.src = updates.profilePicture;
         settingsProfilePic.style.display = 'block';
         settingsProfilePlaceholder.style.display = 'none';
+        console.log('✅ UI updated with profile picture');
       } else {
         userProfilePic.style.display = 'none';
         settingsProfilePic.style.display = 'none';
         settingsProfilePlaceholder.style.display = 'flex';
+        console.log('✅ Profile picture removed from UI');
       }
     }
     
     return true;
   } catch (error) {
-    console.error('Error saving profile:', error);
+    console.error('❌ Error saving profile:', error);
     return false;
   }
 }
@@ -2416,18 +2592,34 @@ clearCacheBtn.onclick = function() {
 // Auth State Listener
 onAuthStateChanged(auth, async (user) => {
   if (user) {
+    console.log('🔵 User authenticated:', user.uid);
+    
+    // Show loading overlay
+    loadingOverlay.style.display = 'flex';
+    
     authSection.style.display = 'none';
     mainApp.style.display = 'flex';
     statusBar.style.display = 'flex';
     updateMobileUI();
     
+    // Load profile and notes
     await loadUserProfile(user);
     await loadNotes();
+    
+    // Hide loading overlay
+    setTimeout(() => {
+      loadingOverlay.style.display = 'none';
+    }, 500);
+    
+    console.log('✅ App ready');
   } else {
+    console.log('ℹ️ User logged out');
+    
     authSection.style.display = 'block';
     mainApp.style.display = 'none';
     statusBar.style.display = 'none';
     mobileMenuBtn.style.display = 'none';
+    loadingOverlay.style.display = 'none';
     notes = [];
     renderNotes();
     
